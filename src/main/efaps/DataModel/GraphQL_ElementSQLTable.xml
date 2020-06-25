@@ -24,22 +24,21 @@
     <specification />
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_DefinitionSQLTable</name>
+        <name>GraphQL_ElementSQLTable</name>
         <typeid-column>TYPEID</typeid-column>
         <database>
-            <table-name>T_GRAPHQLDEF</table-name>
+            <table-name>T_GRAPHQLELEMENT</table-name>
             <column name="TYPEID"       type="INTEGER"                   not-null="true"/>
             <column name="COMPANYID"    type="INTEGER"                   not-null="true"/>
             <column name="NAME"         type="STRING_SHORT" length="128" not-null="true"/>
             <column name="DESCR"        type="STRING_SHORT" length="256" not-null="true"/>
-            <column name="ACTIVE"       type="BOOLEAN"                   not-null="true"/>
             <column name="CREATOR"      type="INTEGER"                   not-null="true"/>
             <column name="CREATED"      type="DATETIME"                  not-null="true"/>
             <column name="MODIFIER"     type="INTEGER"                   not-null="true"/>
             <column name="MODIFIED"     type="DATETIME"                  not-null="true"/>
-            <foreign name="T_GRAPHQLDEF_FK_CRTR"         key="CREATOR"   reference="T_USERPERSON(ID)"/>
-            <foreign name="T_GRAPHQLDEF_FK_MDFR"         key="MODIFIER"  reference="T_USERPERSON(ID)"/>
-            <foreign name="T_GRAPHQLDEF_FK_COMPANYID"    key="COMPANYID" reference="T_USERABSTRACT(ID)"/>
+            <foreign name="T_GRAPHQLELEMENT_FK_CRTR"         key="CREATOR"   reference="T_USERPERSON(ID)"/>
+            <foreign name="T_GRAPHQLELEMENT_FK_MDFR"         key="MODIFIER"  reference="T_USERPERSON(ID)"/>
+            <foreign name="T_GRAPHQLELEMENT_FK_COMPANYID"    key="COMPANYID" reference="T_USERABSTRACT(ID)"/>
         </database>
     </definition>
 </datamodel-sqltable>

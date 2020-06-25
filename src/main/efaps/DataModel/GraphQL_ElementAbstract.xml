@@ -23,72 +23,66 @@
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_DefinitionAbstract</name>
+        <name>GraphQL_ElementAbstract</name>
         <purpose abstract="true" />
         <attribute>
             <name>Type</name>
             <type>Type</type>
-            <sqltable>GraphQL_DefinitionSQLTable</sqltable>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>TYPEID</sqlcolumn>
         </attribute>
         <attribute>
             <name>OID</name>
             <type>OID</type>
-            <sqltable>GraphQL_DefinitionSQLTable</sqltable>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>TYPEID,ID</sqlcolumn>
         </attribute>
         <attribute>
             <name>ID</name>
             <type>Long</type>
-            <sqltable>GraphQL_DefinitionSQLTable</sqltable>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>ID</sqlcolumn>
         </attribute>
         <attribute>
             <name>Company</name>
             <type>CompanyLink</type>
-            <sqltable>GraphQL_DefinitionSQLTable</sqltable>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>COMPANYID</sqlcolumn>
         </attribute>
         <attribute>
             <name>Name</name>
             <type>String</type>
-            <sqltable>GraphQL_DefinitionSQLTable</sqltable>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>NAME</sqlcolumn>
         </attribute>
         <attribute>
             <name>Description</name>
             <type>String</type>
-            <sqltable>GraphQL_DefinitionSQLTable</sqltable>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>DESCR</sqlcolumn>
-        </attribute>
-        <attribute>
-            <name>Active</name>
-            <type>Boolean</type>
-            <sqltable>GraphQL_DefinitionSQLTable</sqltable>
-            <sqlcolumn>ACTIVE</sqlcolumn>
         </attribute>
         <attribute>
             <name>Creator</name>
             <type>CreatorLink</type>
-            <sqltable>GraphQL_DefinitionSQLTable</sqltable>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>CREATOR</sqlcolumn>
         </attribute>
         <attribute>
             <name>Created</name>
             <type>Created</type>
-            <sqltable>GraphQL_DefinitionSQLTable</sqltable>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>CREATED</sqlcolumn>
         </attribute>
         <attribute>
             <name>Modifier</name>
             <type>ModifierLink</type>
-            <sqltable>GraphQL_DefinitionSQLTable</sqltable>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>MODIFIER</sqlcolumn>
         </attribute>
         <attribute>
             <name>Modified</name>
             <type>Modified</type>
-            <sqltable>GraphQL_DefinitionSQLTable</sqltable>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>MODIFIED</sqlcolumn>
         </attribute>
     </definition>
