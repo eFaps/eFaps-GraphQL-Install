@@ -18,18 +18,25 @@
 <datamodel-type xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>d8161807-22e2-4e5d-813d-680b6109b188</uuid>
+    <uuid>cee2bcb0-c6c0-48f4-8782-e4081360ca6a</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_FieldDefinition</name>
-        <parent>GraphQL_ElementAbstract</parent>
+        <name>GraphQL_EntryPointFieldDefinition2ObjectType</name>
+        <parent>GraphQL_Object2ObjectAbstract</parent>
         <attribute>
-            <name>FieldType</name>
-            <type>Enum</type>
-            <className>org.efaps.graphql.providers.FieldType</className>
-            <sqltable>GraphQL_ElementSQLTable</sqltable>
-            <sqlcolumn>INT1</sqlcolumn>
+            <name>FromLink</name>
+            <type>Link</type>
+            <typelink>GraphQL_EntryPointFieldDefinition</typelink>
+            <sqltable>GraphQL_Object2ObjectSQLTable</sqltable>
+            <sqlcolumn>FROMID</sqlcolumn>
+        </attribute>
+        <attribute>
+            <name>ToLink</name>
+            <type>Link</type>
+            <typelink>GraphQL_ObjectType</typelink>
+            <sqltable>GraphQL_Object2ObjectSQLTable</sqltable>
+            <sqlcolumn>TOID</sqlcolumn>
         </attribute>
     </definition>
 </datamodel-type>
