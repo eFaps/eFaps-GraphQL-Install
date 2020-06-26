@@ -18,11 +18,25 @@
 <datamodel-type xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>d8161807-22e2-4e5d-813d-680b6109b188</uuid>
+    <uuid>b37b691a-31b1-41d1-a6c0-508d68b365c1</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_FieldDefinition</name>
-        <parent>GraphQL_FieldDefinitionAbstract</parent>
+        <name>GraphQL_DataFetcher2FieldDefinitionAbstract</name>
+        <parent>GraphQL_Object2ObjectAbstract</parent>
+        <attribute>
+            <name>FromLink</name>
+            <type>Link</type>
+            <typelink>GraphQL_DataFetcher</typelink>
+            <sqltable>GraphQL_Object2ObjectSQLTable</sqltable>
+            <sqlcolumn>FROMID</sqlcolumn>
+        </attribute>
+        <attribute>
+            <name>ToLink</name>
+            <type>Link</type>
+            <typelink>GraphQL_FieldDefinitionAbstract</typelink>
+            <sqltable>GraphQL_Object2ObjectSQLTable</sqltable>
+            <sqlcolumn>TOID</sqlcolumn>
+        </attribute>
     </definition>
 </datamodel-type>

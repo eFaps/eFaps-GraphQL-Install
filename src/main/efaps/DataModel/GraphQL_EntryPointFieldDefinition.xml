@@ -24,13 +24,6 @@
     <definition>
         <version-expression>(version==latest)</version-expression>
         <name>GraphQL_EntryPointFieldDefinition</name>
-        <parent>GraphQL_ElementAbstract</parent>
-        <attribute>
-            <name>FieldType</name>
-            <type>Enum</type>
-            <className>org.efaps.graphql.providers.FieldType</className>
-            <sqltable>GraphQL_ElementSQLTable</sqltable>
-            <sqlcolumn>INT1</sqlcolumn>
-        </attribute>
+        <parent>GraphQL_FieldDefinitionAbstract</parent>
     </definition>
 </datamodel-type>
