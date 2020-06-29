@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
  Copyright 2003 - 2020 The eFaps Team
 
@@ -19,20 +18,13 @@
 <ui-menu xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>cdb90666-1917-4118-b547-b7ab74299379</uuid>
+    <uuid>82f06b77-e361-4b92-8340-31a30ecf14f8</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_ObjectTypeTree</name>
-        <target>
-            <menu>GraphQL_ObjectTypeTree_Menu</menu>
-            <form>GraphQL_ObjectTypeForm</form>
-        </target>
-        <type>GraphQL_ObjectType</type>
+        <name>GraphQL_EntryPointFieldDefinitionTree_Menu_Action</name>
         <childs>
-            <child>GraphQL_ObjectTypeTree_Fields</child>
+            <child>GraphQL_EntryPointFieldDefinitionTree_Menu_Action_Edit</child>
         </childs>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
     </definition>
 </ui-menu>

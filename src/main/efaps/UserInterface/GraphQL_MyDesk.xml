@@ -25,6 +25,7 @@
         <version-expression>(version==latest)</version-expression>
         <name>GraphQL_MyDesk</name>
         <childs>
+            <child>GraphQL_EntryPointFieldDefinitionMyDesk</child>
             <child>GraphQL_ObjectTypeMyDesk</child>
         </childs>
         <parents>

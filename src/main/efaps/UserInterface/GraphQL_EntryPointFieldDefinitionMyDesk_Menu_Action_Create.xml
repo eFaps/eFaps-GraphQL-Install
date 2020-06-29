@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
  Copyright 2003 - 2020 The eFaps Team
 
@@ -16,23 +15,21 @@
  limitations under the License.
 
 -->
-<ui-menu xmlns="http://www.efaps.org/xsd"
+<ui-command xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>cdb90666-1917-4118-b547-b7ab74299379</uuid>
+    <uuid>994e4572-39f4-49be-85ed-4cd2aa1b8ba0</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_ObjectTypeTree</name>
+        <name>GraphQL_EntryPointFieldDefinitionMyDesk_Menu_Action_Create</name>
         <target>
-            <menu>GraphQL_ObjectTypeTree_Menu</menu>
-            <form>GraphQL_ObjectTypeForm</form>
+            <form>GraphQL_EntryPointFieldDefinitionForm</form>
+            <execute
+                program="org.efaps.esjp.common.uiform.Create" />
         </target>
-        <type>GraphQL_ObjectType</type>
-        <childs>
-            <child>GraphQL_ObjectTypeTree_Fields</child>
-        </childs>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
+        <property name="Target">modal</property>
+        <property name="TargetCreateType">GraphQL_EntryPointFieldDefinition</property>
+        <property name="TargetMode">edit</property>
     </definition>
-</ui-menu>
+</ui-command>
