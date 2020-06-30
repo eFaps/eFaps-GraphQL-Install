@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
  Copyright 2003 - 2020 The eFaps Team
 
@@ -16,25 +15,16 @@
  limitations under the License.
 
 -->
-<ui-command xmlns="http://www.efaps.org/xsd"
+<ui-menu xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>941403c8-c508-4548-8f49-12cf41743191</uuid>
+    <uuid>ae23b998-f168-4034-bdab-1bfc93bddbc8</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_ObjectTypeTree_Fields</name>
-        <target>
-            <menu>GraphQL_ObjectTypeTree_Fields_Menu</menu>
-            <table>GraphQL_ObjectType2FieldDefinitionTable</table>
-            <evaluate
-                program="org.efaps.esjp.common.uitable.MultiPrint">
-                <property name="Type">GraphQL_ObjectType2FieldDefinition</property>
-                <property name="LinkFrom">FromLink</property>
-            </evaluate>
-        </target>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
-        <property name="TargetShowCheckBoxes">true</property>
+        <name>GraphQL_ObjectTypeTree_Fields_Menu</name>
+        <childs>
+            <child>GraphQL_ObjectTypeTree_Fields_Menu_Action</child>
+        </childs>
     </definition>
-</ui-command>
+</ui-menu>

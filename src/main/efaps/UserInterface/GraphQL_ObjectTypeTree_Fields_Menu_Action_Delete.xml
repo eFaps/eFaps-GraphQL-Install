@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
  Copyright 2003 - 2020 The eFaps Team
 
@@ -19,22 +18,16 @@
 <ui-command xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>941403c8-c508-4548-8f49-12cf41743191</uuid>
+    <uuid>153e92ee-93e0-46d0-8289-1bbbc5a67b31</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_ObjectTypeTree_Fields</name>
+        <name>GraphQL_ObjectTypeTree_Fields_Menu_Action_Delete</name>
         <target>
-            <menu>GraphQL_ObjectTypeTree_Fields_Menu</menu>
-            <table>GraphQL_ObjectType2FieldDefinitionTable</table>
-            <evaluate
-                program="org.efaps.esjp.common.uitable.MultiPrint">
-                <property name="Type">GraphQL_ObjectType2FieldDefinition</property>
-                <property name="LinkFrom">FromLink</property>
-            </evaluate>
+            <execute
+                program="org.efaps.esjp.common.uitable.CommonDelete" />
         </target>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
-        <property name="TargetShowCheckBoxes">true</property>
+        <property name="AskUser">true</property>
+        <property name="Submit">true</property>
     </definition>
 </ui-command>
