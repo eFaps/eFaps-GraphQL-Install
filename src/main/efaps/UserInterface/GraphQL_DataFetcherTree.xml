@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
 
  Copyright 2003 - 2020 The eFaps Team
 
@@ -18,19 +19,18 @@
 <ui-menu xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>5d43c757-376b-46d1-8c91-1e82b00a36e3</uuid>
+    <uuid>fa7af02f-c001-403e-898f-128156cf4375</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_EntryPointFieldDefinitionTree</name>
+        <name>GraphQL_DataFetcherTree</name>
         <target>
-            <menu>GraphQL_EntryPointFieldDefinitionTree_Menu</menu>
-            <form>GraphQL_EntryPointFieldDefinitionForm</form>
+            <menu>GraphQL_DataFetcherTree_Menu</menu>
+            <form>GraphQL_DataFetcherForm</form>
         </target>
-        <type>GraphQL_EntryPointFieldDefinition</type>
+        <type>GraphQL_DataFetcher</type>
         <childs>
-            <child>GraphQL_EntryPointFieldDefinitionTree_ObjectType</child>
-            <child>GraphQL_EntryPointFieldDefinitionTree_DataFetcher</child>
+            <child>GraphQL_DataFetcherTree_Properties</child>
         </childs>
         <property name="Target">content</property>
         <property name="TargetMode">view</property>

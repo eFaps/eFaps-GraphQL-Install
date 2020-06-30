@@ -15,24 +15,21 @@
  limitations under the License.
 
 -->
-<ui-menu xmlns="http://www.efaps.org/xsd"
+<ui-command xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>5d43c757-376b-46d1-8c91-1e82b00a36e3</uuid>
+    <uuid>45a8a109-a92e-4d4f-bc18-59ee181884ab</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_EntryPointFieldDefinitionTree</name>
+        <name>GraphQL_DataFetcherTree_Menu_Action_Edit</name>
         <target>
-            <menu>GraphQL_EntryPointFieldDefinitionTree_Menu</menu>
-            <form>GraphQL_EntryPointFieldDefinitionForm</form>
+            <form>GraphQL_DataFetcherForm</form>
+            <execute program="org.efaps.esjp.common.uiform.Edit" />
         </target>
-        <type>GraphQL_EntryPointFieldDefinition</type>
-        <childs>
-            <child>GraphQL_EntryPointFieldDefinitionTree_ObjectType</child>
-            <child>GraphQL_EntryPointFieldDefinitionTree_DataFetcher</child>
-        </childs>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
+        <property name="Target">modal</property>
+        <property name="TargetMode">edit</property>
+        <property name="WindowHeight">460</property>
+        <property name="WindowWidth">515</property>
     </definition>
-</ui-menu>
+</ui-command>

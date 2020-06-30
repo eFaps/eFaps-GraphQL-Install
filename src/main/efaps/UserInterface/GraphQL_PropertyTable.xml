@@ -15,24 +15,23 @@
  limitations under the License.
 
 -->
-<ui-menu xmlns="http://www.efaps.org/xsd"
+<ui-table xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>5d43c757-376b-46d1-8c91-1e82b00a36e3</uuid>
+    <uuid>d04accc9-8767-4ed7-87cf-76680fb06cc0</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_EntryPointFieldDefinitionTree</name>
-        <target>
-            <menu>GraphQL_EntryPointFieldDefinitionTree_Menu</menu>
-            <form>GraphQL_EntryPointFieldDefinitionForm</form>
-        </target>
-        <type>GraphQL_EntryPointFieldDefinition</type>
-        <childs>
-            <child>GraphQL_EntryPointFieldDefinitionTree_ObjectType</child>
-            <child>GraphQL_EntryPointFieldDefinitionTree_DataFetcher</child>
-        </childs>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
+        <name>GraphQL_PropertyTable</name>
+        <field name="key">
+            <property name="Attribute">Key</property>
+            <property name="Label">GraphQL_ObjectType/name.Label</property>
+            <property name="ModeSearch">READONLY</property>
+        </field>
+        <field name="value">
+            <property name="Attribute">Value</property>
+            <property name="Label">GraphQL_ObjectType/Description.Label</property>
+            <property name="ModeSearch">READONLY</property>
+        </field>
     </definition>
-</ui-menu>
+</ui-table>

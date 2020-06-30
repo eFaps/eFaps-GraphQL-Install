@@ -18,21 +18,13 @@
 <ui-menu xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>5d43c757-376b-46d1-8c91-1e82b00a36e3</uuid>
+    <uuid>3ce8f09a-51bd-4efd-bdf0-3a342bf763c1</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_EntryPointFieldDefinitionTree</name>
-        <target>
-            <menu>GraphQL_EntryPointFieldDefinitionTree_Menu</menu>
-            <form>GraphQL_EntryPointFieldDefinitionForm</form>
-        </target>
-        <type>GraphQL_EntryPointFieldDefinition</type>
+        <name>GraphQL_DataFetcherTree_Menu</name>
         <childs>
-            <child>GraphQL_EntryPointFieldDefinitionTree_ObjectType</child>
-            <child>GraphQL_EntryPointFieldDefinitionTree_DataFetcher</child>
+            <child>GraphQL_DataFetcherTree_Menu_Action</child>
         </childs>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
     </definition>
 </ui-menu>
