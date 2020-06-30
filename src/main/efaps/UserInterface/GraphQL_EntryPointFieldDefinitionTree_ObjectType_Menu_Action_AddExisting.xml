@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
 
  Copyright 2003 - 2020 The eFaps Team
 
@@ -18,22 +19,21 @@
 <ui-command xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>f1703c4d-0f94-425d-9049-01eddff63513</uuid>
+    <uuid>d3d02859-b9ed-4ef8-9196-0ce3a64aed3c</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_EntryPointFieldDefinitionTree_ObjectType</name>
+        <name>GraphQL_EntryPointFieldDefinitionTree_ObjectType_Menu_Action_AddExisting</name>
         <target>
-            <menu>GraphQL_EntryPointFieldDefinitionTree_ObjectType_Menu</menu>
-            <table>GraphQL_EntryPointFieldDefinition2ObjectTypeTable</table>
-            <evaluate
-                program="org.efaps.esjp.common.uitable.MultiPrint">
-                <property name="Type">GraphQL_EntryPointFieldDefinition2ObjectType</property>
-                <property name="LinkFrom">FromLink</property>
-            </evaluate>
+            <search>GraphQL_EntryPointFieldDefinitionTree_ObjectType_Menu_Action_AddExistingSearch</search>
+            <execute
+                program="org.efaps.esjp.common.uisearch.Connect">
+                <property name="ConnectType">GraphQL_EntryPointFieldDefinition2ObjectType</property>
+                <property name="ConnectParentAttribute">FromLink</property>
+                <property name="ConnectChildAttribute">ToLink</property>
+            </execute>
         </target>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
-        <property name="TargetShowCheckBoxes">true</property>
+        <property name="Target">modal</property>
+        <property name="TargetCmdRevise">true</property>
     </definition>
 </ui-command>

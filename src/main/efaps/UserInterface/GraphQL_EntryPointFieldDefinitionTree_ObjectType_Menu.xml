@@ -15,25 +15,16 @@
  limitations under the License.
 
 -->
-<ui-command xmlns="http://www.efaps.org/xsd"
+<ui-menu xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>f1703c4d-0f94-425d-9049-01eddff63513</uuid>
+    <uuid>883dd767-f8a3-4b9d-b1a6-1850694f26e2</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_EntryPointFieldDefinitionTree_ObjectType</name>
-        <target>
-            <menu>GraphQL_EntryPointFieldDefinitionTree_ObjectType_Menu</menu>
-            <table>GraphQL_EntryPointFieldDefinition2ObjectTypeTable</table>
-            <evaluate
-                program="org.efaps.esjp.common.uitable.MultiPrint">
-                <property name="Type">GraphQL_EntryPointFieldDefinition2ObjectType</property>
-                <property name="LinkFrom">FromLink</property>
-            </evaluate>
-        </target>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
-        <property name="TargetShowCheckBoxes">true</property>
+        <name>GraphQL_EntryPointFieldDefinitionTree_ObjectType_Menu</name>
+        <childs>
+            <child>GraphQL_EntryPointFieldDefinitionTree_ObjectType_Menu_Action</child>
+        </childs>
     </definition>
-</ui-command>
+</ui-menu>
