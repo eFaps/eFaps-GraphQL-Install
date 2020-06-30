@@ -15,25 +15,16 @@
  limitations under the License.
 
 -->
-<ui-command xmlns="http://www.efaps.org/xsd"
+<ui-menu xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>4265c9b8-8b10-4c3f-b430-97e0e38b54fc</uuid>
+    <uuid>5eac9a7c-3af2-4724-bc51-87dd89a101b5</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_EntryPointFieldDefinitionTree_DataFetcher</name>
-        <target>
-            <menu>GraphQL_EntryPointFieldDefinitionTree_DataFetcher_Menu</menu>
-            <table>GraphQL_EntryPointFieldDefinition2DataFetcherTable</table>
-            <evaluate
-                program="org.efaps.esjp.common.uitable.MultiPrint">
-                <property name="Type">GraphQL_DataFetcher2FieldDefinitionAbstract</property>
-                <property name="LinkFrom">ToLink</property>
-            </evaluate>
-        </target>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
-        <property name="TargetShowCheckBoxes">true</property>
+        <name>GraphQL_EntryPointFieldDefinitionTree_DataFetcher_Menu</name>
+        <childs>
+            <child>GraphQL_EntryPointFieldDefinitionTree_DataFetcher_Menu_Action</child>
+        </childs>
     </definition>
-</ui-command>
+</ui-menu>
