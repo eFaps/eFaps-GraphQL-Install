@@ -31,7 +31,7 @@
             <column name="TYPEID"       type="INTEGER"                   not-null="true"/>
             <column name="COMPANYID"    type="INTEGER"                   not-null="true"/>
             <column name="NAME"         type="STRING_SHORT" length="128" not-null="true"/>
-            <column name="DESCR"        type="STRING_SHORT" length="256" not-null="true"/>
+            <column name="DESCR"        type="STRING_SHORT" length="256"/>
             <column name="INT1"         type="INTEGER"/>
             <column name="STR1"         type="STRING_SHORT" length="256" />
             <column name="STR2"         type="STRING_SHORT" length="512" />

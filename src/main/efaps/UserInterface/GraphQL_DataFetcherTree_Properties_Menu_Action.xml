@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
  Copyright 2003 - 2020 The eFaps Team
 
@@ -16,25 +15,17 @@
  limitations under the License.
 
 -->
-<ui-command xmlns="http://www.efaps.org/xsd"
+<ui-menu xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>cf39081d-eb23-4e85-b4c9-4be16cf2df8f</uuid>
+    <uuid>007a132a-dbb6-4c0d-bc04-38d9a181415c</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_DataFetcherTree_Properties</name>
-        <target>
-            <menu>GraphQL_DataFetcherTree_Properties_Menu</menu>
-            <table>GraphQL_PropertyTable</table>
-            <evaluate
-                program="org.efaps.esjp.common.uitable.MultiPrint">
-                <property name="Type">GraphQL_Property</property>
-                <property name="LinkFrom">ParentElementLink</property>
-            </evaluate>
-        </target>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
-        <property name="TargetShowCheckBoxes">true</property>
+        <name>GraphQL_DataFetcherTree_Properties_Menu_Action</name>
+        <childs>
+            <child>GraphQL_DataFetcherTree_Properties_Menu_Action_Create</child>
+            <child>GraphQL_DataFetcherTree_Properties_Menu_Action_Delete</child>
+        </childs>
     </definition>
-</ui-command>
+</ui-menu>
