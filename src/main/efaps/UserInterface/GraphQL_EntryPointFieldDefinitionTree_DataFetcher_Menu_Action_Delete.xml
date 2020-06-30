@@ -25,7 +25,10 @@
         <name>GraphQL_EntryPointFieldDefinitionTree_DataFetcher_Menu_Action_Delete</name>
         <target>
             <execute
-                program="org.efaps.esjp.common.uitable.CommonDelete" />
+                program="org.efaps.esjp.common.uitable.CommonDelete">
+                <property name="Select4Delete01">linkto[FromLink].instance</property>
+                <property name="Select4Delete02">instance</property>
+            </execute>
         </target>
         <property name="AskUser">true</property>
         <property name="Submit">true</property>
