@@ -26,20 +26,19 @@
         <field name="type">
             <property name="SelectAlternateOID">linkto[ToLink].oid</property>
             <property name="Select">linkto[ToLink].attribute[Type].label</property>
-            <property name="Label">GraphQL_ObjectType2FieldDefinitionTable.type.Label</property>
+            <property name="Label">GraphQL_ObjectType/Type.Label</property>
             <property name="ModeSearch">READONLY</property>
             <property name="HRef">TREE</property>
+            <property name="UIProvider">org.efaps.admin.datamodel.ui.StringUI</property>
         </field>
         <field name="name">
             <property name="Select">linkto[ToLink].attribute[Name]</property>
-            <property name="Attribute">Name</property>
-            <property name="Label">GraphQL_ObjectType2FieldDefinitionTable.name.Label</property>
+            <property name="Label">GraphQL_ObjectType/Name.Label</property>
             <property name="ModeSearch">READONLY</property>
         </field>
         <field name="description">
             <property name="Select">linkto[ToLink].attribute[Description]</property>
-            <property name="Attribute">Description</property>
-            <property name="Label">GraphQL_ObjectType2FieldDefinitionTable.description.Label</property>
+            <property name="Label">GraphQL_ObjectType/Description.Label</property>
             <property name="ModeSearch">READONLY</property>
         </field>
     </definition>

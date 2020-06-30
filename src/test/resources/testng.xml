@@ -4,6 +4,7 @@
     <test name="CITests">
          <parameter name="baseFolder" value="../../../main/efaps"></parameter>
          <parameter name="application" value="eFaps-GraphQL"/>
+         <parameter name="regex4MenuLabelExclude" value="GraphQL.*_Menu.Label$"/>
          <packages>
             <package name="org.efaps.tests.*"></package>
         </packages>

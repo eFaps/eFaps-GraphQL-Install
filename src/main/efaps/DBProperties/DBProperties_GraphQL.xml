@@ -15,23 +15,15 @@
  limitations under the License.
 
 -->
-<ui-table xmlns="http://www.efaps.org/xsd"
+<dbproperties xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>d04accc9-8767-4ed7-87cf-76680fb06cc0</uuid>
+    <uuid>f89b2133-939a-4514-a676-6239ae9a52e5</uuid>
     <file-application>eFaps-GraphQL</file-application>
-    <definition>
-        <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_PropertyTable</name>
-        <field name="key">
-            <property name="Attribute">Key</property>
-            <property name="Label">GraphQL_Property/Key.Label</property>
-            <property name="ModeSearch">READONLY</property>
-        </field>
-        <field name="value">
-            <property name="Attribute">Value</property>
-            <property name="Label">GraphQL_Property/Value.Label</property>
-            <property name="ModeSearch">READONLY</property>
-        </field>
-    </definition>
-</ui-table>
+    <bundle name="eFaps-GraphQL" sequence="1" />
+    <resource>
+        <type>Properties</type>
+        <language />
+        <file>GraphQL.properties</file>
+    </resource>
+</dbproperties>

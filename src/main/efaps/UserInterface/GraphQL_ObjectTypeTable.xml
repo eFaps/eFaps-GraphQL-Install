@@ -32,7 +32,7 @@
         </field>
         <field name="name">
             <property name="Attribute">Name</property>
-            <property name="Label">GraphQL_ObjectType/name.Label</property>
+            <property name="Label">GraphQL_ObjectType/Name.Label</property>
             <property name="ModeSearch">READONLY</property>
         </field>
         <field name="description">
