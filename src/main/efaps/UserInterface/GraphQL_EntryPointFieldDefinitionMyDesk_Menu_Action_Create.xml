@@ -30,6 +30,6 @@
         </target>
         <property name="Target">modal</property>
         <property name="TargetCreateType">GraphQL_EntryPointFieldDefinition</property>
-        <property name="TargetMode">edit</property>
+        <property name="TargetMode">create</property>
     </definition>
 </ui-command>
