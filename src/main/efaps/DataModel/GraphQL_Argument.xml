@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
+
+ Copyright 2003 - 2020 The eFaps Team
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+-->
+<datamodel-type xmlns="http://www.efaps.org/xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
+    <uuid>b01cd270-95ec-4280-ba9b-53e2f95e4e7e</uuid>
+    <file-application>eFaps-GraphQL</file-application>
+    <definition>
+        <version-expression>(version==latest)</version-expression>
+        <name>GraphQL_Argument</name>
+        <parent>GraphQL_ElementAbstract</parent>
+        <attribute>
+            <name>FieldLink</name>
+            <type>Link</type>
+            <typelink>GraphQL_FieldDefinitionAbstract</typelink>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
+            <sqlcolumn>INT1</sqlcolumn>
+        </attribute>
+        <attribute>
+            <name>ArgumentType</name>
+            <type>Enum</type>
+            <className>org.efaps.graphql.providers.FieldType</className>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
+            <sqlcolumn>INT2</sqlcolumn>
+        </attribute>
+        <attribute>
+            <name>WhereStmt</name>
+            <type>String</type>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
+            <sqlcolumn>STR1</sqlcolumn>
+        </attribute>
+    </definition>
+</datamodel-type>

@@ -28,11 +28,17 @@ import org.efaps.admin.program.esjp.EFapsApplication;
 import org.efaps.admin.program.esjp.EFapsUUID;
 import org.efaps.db.Instance;
 import org.efaps.eql.EQL;
+import org.efaps.eql.builder.Where;
+import org.efaps.eql2.EQL2;
+import org.efaps.eql2.IWhereElementTerm;
+import org.efaps.eql2.impl.PrintQueryStatement;
 import org.efaps.esjp.common.properties.PropertiesUtil;
 import org.efaps.esjp.db.InstanceUtils;
+import org.efaps.graphql.definition.ArgumentDef;
 import org.efaps.graphql.definition.FieldDef;
 import org.efaps.graphql.definition.ObjectDef;
 import org.efaps.graphql.providers.DataFetcherProvider;
+import org.jfree.util.Log;
 
 import graphql.GraphQLContext;
 import graphql.execution.DataFetcherResult;
@@ -56,6 +62,15 @@ public abstract class BaseDataFetcher_Base
         final List<Map<String, Object>> values = new ArrayList<>();
         final var fieldName = _environment.getFieldDefinition().getName();
         final var parentTypeName = _environment.getExecutionStepInfo().getFieldContainer().getName();
+        final Optional<ObjectDef> baseObjectDefOpt = ((GraphQLContext) _environment.getContext())
+                        .getOrEmpty(parentTypeName);
+        final var argumentDefs = new ArrayList<ArgumentDef>();
+        if (baseObjectDefOpt.isPresent()) {
+            final FieldDef fieldDef = baseObjectDefOpt.get().getFields().get(fieldName);
+            if (fieldDef != null) {
+                argumentDefs.addAll(fieldDef.getArguments());
+            }
+        }
         final String contextKey = DataFetcherProvider.contextKey(parentTypeName, fieldName);
         final var props = ((GraphQLContext) _environment.getContext()).getOrDefault(contextKey,
                         new HashMap<String, String>());
@@ -75,10 +90,63 @@ public abstract class BaseDataFetcher_Base
         if (objectDefOpt.isPresent()) {
             final var objectDef = objectDefOpt.get();
             final var query = EQL.builder().print().query(types.values().toArray(new String[types.values().size()]));
+            Where where = null;
             if (!linkFroms.isEmpty()) {
-                final Instance parentInstance = (Instance) ((Map<?, ?>)_environment.getSource()).get("currentInstance");
+                final Instance parentInstance = (Instance) ((Map<?, ?>) _environment.getSource())
+                                .get("currentInstance");
                 if (InstanceUtils.isValid(parentInstance)) {
-                    query.where().attr(linkFroms.values().iterator().next()).eq(parentInstance);
+                    where = query.where();
+                    where.attr(linkFroms.values().iterator().next()).eq(parentInstance);
+
+                }
+            }
+            for (final var entry : _environment.getArguments().entrySet()) {
+                final var argDefOpt = argumentDefs.stream().filter(en -> en.getName().equals(entry.getKey()))
+                                .findFirst();
+                if (argDefOpt.isPresent()) {
+                    if (where == null) {
+                        where = query.where();
+                    } else {
+                        where.and();
+                    }
+
+                    final var stmt = (PrintQueryStatement) EQL2.parse("print query type TYPE where "
+                                    + String.format(argDefOpt.get().getWhereStmt(), entry.getValue())
+                                    + " select attribute[OID]");
+                    final var tmp = where.attr(((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0))
+                                    .element().getAttribute());
+
+                    switch (((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0)).element().getComparison()) {
+                        case EQUAL:
+                            tmp.eq((String) entry.getValue());
+                            break;
+                        case GREATER:
+                            tmp.greater((String) entry.getValue());
+                            break;
+                        case GREATEREQ:
+                            tmp.greaterOrEq((String) entry.getValue());
+                            break;
+                        case LESS:
+                            tmp.less((String) entry.getValue());
+                            break;
+                        case LESSEQ:
+                            tmp.lessOrEq((String) entry.getValue());
+                            break;
+                        case LIKE:
+                            tmp.like((String) entry.getValue());
+                            break;
+                        case IN:
+                            tmp.in((String) entry.getValue());
+                            break;
+                        case NOTIN:
+                            tmp.notin((String) entry.getValue());
+                            break;
+                        case UNEQUAL:
+                            tmp.uneq((String) entry.getValue());
+                            break;
+                        default:
+                            Log.error("Not working");
+                    }
                 }
             }
             final var print = query.select();

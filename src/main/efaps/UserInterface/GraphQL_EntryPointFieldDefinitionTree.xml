@@ -29,6 +29,7 @@
         </target>
         <type>GraphQL_EntryPointFieldDefinition</type>
         <childs>
+            <child>GraphQL_FieldDefinitionTree_Arguments</child>
             <child>GraphQL_EntryPointFieldDefinitionTree_ObjectType</child>
             <child>GraphQL_EntryPointFieldDefinitionTree_DataFetcher</child>
         </childs>
