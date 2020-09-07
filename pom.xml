@@ -96,6 +96,7 @@
                 <executions>
                     <execution>
                         <goals>
+                            <goal>generate-ciclass</goal>
                             <goal>generate-installation</goal>
                         </goals>
                     </execution>
@@ -106,6 +107,7 @@
                     <transactionTimeout>900</transactionTimeout>
                     <count>${count}</count>
                     <file>${file}</file>
+                    <ciName>GraphQL</ciName>
                 </configuration>
                 <dependencies>
                     <!-- Connection Pooling -->
