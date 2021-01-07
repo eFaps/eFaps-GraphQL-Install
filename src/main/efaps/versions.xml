@@ -20,13 +20,6 @@
 <install xmlns="http://www.efaps.org/xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
     <application>eFaps-GraphQL</application>
-    <dependencies>
-        <dependency order="0">
-            <groupId>org.efaps</groupId>
-            <artifactId>efaps-kernel-install</artifactId>
-            <version>11.0.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
     <version number="1" reloadCache="true" login="true" compile="true">
         <description>Install eFaps GraphQL</description>
     </version>
