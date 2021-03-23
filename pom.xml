@@ -26,7 +26,7 @@
     </parent>
     <packaging>jar</packaging>
     <artifactId>efaps-graphql-install</artifactId>
-    <name>eFaps WebApp Install</name>
+    <name>eFaps GraphQL Install</name>
     <url>http://www.efaps.org</url>
     <licenses>
         <license>
