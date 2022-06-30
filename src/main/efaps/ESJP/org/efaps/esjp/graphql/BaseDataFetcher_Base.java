@@ -1,5 +1,5 @@
 /*
- * Copyright 2003 - 2020 The eFaps Team
+ * Copyright 2003 - 2022 The eFaps Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,6 @@ import org.efaps.graphql.definition.ObjectDef;
 import org.efaps.graphql.providers.DataFetcherProvider;
 import org.jfree.util.Log;
 
-import graphql.GraphQLContext;
 import graphql.execution.DataFetcherResult;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
@@ -61,8 +60,8 @@ public abstract class BaseDataFetcher_Base
         final var resultBldr = DataFetcherResult.newResult();
         final List<Map<String, Object>> values = new ArrayList<>();
         final var fieldName = _environment.getFieldDefinition().getName();
-        final var parentTypeName = _environment.getExecutionStepInfo().getFieldContainer().getName();
-        final Optional<ObjectDef> baseObjectDefOpt = ((GraphQLContext) _environment.getContext())
+        final var parentTypeName = _environment.getExecutionStepInfo().getObjectType().getName();
+        final Optional<ObjectDef> baseObjectDefOpt = _environment.getGraphQlContext()
                         .getOrEmpty(parentTypeName);
         final var argumentDefs = new ArrayList<ArgumentDef>();
         if (baseObjectDefOpt.isPresent()) {
@@ -72,7 +71,7 @@ public abstract class BaseDataFetcher_Base
             }
         }
         final String contextKey = DataFetcherProvider.contextKey(parentTypeName, fieldName);
-        final var props = ((GraphQLContext) _environment.getContext()).getOrDefault(contextKey,
+        final var props = _environment.getGraphQlContext().getOrDefault(contextKey,
                         new HashMap<String, String>());
         final var properties = new Properties();
         properties.putAll(props);
@@ -86,7 +85,7 @@ public abstract class BaseDataFetcher_Base
             graphQLType = ((GraphQLList) graphQLType).getWrappedType();
         }
         final var graphTypeName = ((GraphQLNamedType) graphQLType).getName();
-        final Optional<ObjectDef> objectDefOpt = ((GraphQLContext) _environment.getContext()).getOrEmpty(graphTypeName);
+        final Optional<ObjectDef> objectDefOpt = _environment.getGraphQlContext().getOrEmpty(graphTypeName);
         if (objectDefOpt.isPresent()) {
             final var objectDef = objectDefOpt.get();
             final var query = EQL.builder().print().query(types.values().toArray(new String[types.values().size()]));
@@ -97,7 +96,6 @@ public abstract class BaseDataFetcher_Base
                 if (InstanceUtils.isValid(parentInstance)) {
                     where = query.where();
                     where.attr(linkFroms.values().iterator().next()).eq(parentInstance);
-
                 }
             }
             for (final var entry : _environment.getArguments().entrySet()) {
