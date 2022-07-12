@@ -39,6 +39,8 @@ import org.efaps.graphql.definition.FieldDef;
 import org.efaps.graphql.definition.ObjectDef;
 import org.efaps.graphql.providers.DataFetcherProvider;
 import org.jfree.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import graphql.execution.DataFetcherResult;
 import graphql.schema.DataFetcher;
@@ -53,10 +55,13 @@ public abstract class BaseDataFetcher_Base
     implements DataFetcher<Object>
 {
 
+    private static final Logger LOG = LoggerFactory.getLogger(BaseDataFetcher.class);
+
     @Override
     public Object get(final DataFetchingEnvironment _environment)
         throws Exception
     {
+        LOG.info("Running BaseDataFetcher with: {}", _environment);
         final var resultBldr = DataFetcherResult.newResult();
         final List<Map<String, Object>> values = new ArrayList<>();
         final var fieldName = _environment.getFieldDefinition().getName();
