@@ -16,10 +16,12 @@
  */
 package org.efaps.esjp.graphql;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -38,6 +40,9 @@ import org.efaps.graphql.definition.ArgumentDef;
 import org.efaps.graphql.definition.FieldDef;
 import org.efaps.graphql.definition.ObjectDef;
 import org.efaps.graphql.providers.DataFetcherProvider;
+import org.efaps.graphql.providers.FieldType;
+import org.efaps.util.DateTimeUtil;
+import org.efaps.util.EFapsException;
 import org.jfree.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,6 +112,7 @@ public abstract class BaseDataFetcher_Base
                 final var argDefOpt = argumentDefs.stream().filter(en -> en.getName().equals(entry.getKey()))
                                 .findFirst();
                 if (argDefOpt.isPresent()) {
+                    final var argDef = argDefOpt.get();
                     if (where == null) {
                         where = query.where();
                     } else {
@@ -114,38 +120,39 @@ public abstract class BaseDataFetcher_Base
                     }
 
                     final var stmt = (PrintQueryStatement) EQL2.parse("print query type TYPE where "
-                                    + String.format(argDefOpt.get().getWhereStmt(), entry.getValue())
+                                    + String.format(argDef.getWhereStmt(), entry.getValue())
                                     + " select attribute[OID]");
                     final var tmp = where.attr(((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0))
                                     .element().getAttribute());
 
+                    final var value = convertArgument(argDef.getFieldType(), entry.getValue());
                     switch (((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0)).element().getComparison()) {
                         case EQUAL:
-                            tmp.eq((String) entry.getValue());
+                            tmp.eq(value);
                             break;
                         case GREATER:
-                            tmp.greater((String) entry.getValue());
+                            tmp.greater(value);
                             break;
                         case GREATEREQ:
-                            tmp.greaterOrEq((String) entry.getValue());
+                            tmp.greaterOrEq(value);
                             break;
                         case LESS:
-                            tmp.less((String) entry.getValue());
+                            tmp.less(value);
                             break;
                         case LESSEQ:
-                            tmp.lessOrEq((String) entry.getValue());
+                            tmp.lessOrEq(value);
                             break;
                         case LIKE:
-                            tmp.like((String) entry.getValue());
+                            tmp.like(value);
                             break;
                         case IN:
-                            tmp.in((String) entry.getValue());
+                            tmp.in(value);
                             break;
                         case NOTIN:
-                            tmp.notin((String) entry.getValue());
+                            tmp.notin(value);
                             break;
                         case UNEQUAL:
-                            tmp.uneq((String) entry.getValue());
+                            tmp.uneq(value);
                             break;
                         default:
                             Log.error("Not working");
@@ -183,6 +190,27 @@ public abstract class BaseDataFetcher_Base
             ret = new HashMap<>();
         } else {
             ret = _environment.getLocalContext();
+        }
+        return ret;
+    }
+
+    protected String convertArgument(final FieldType fieldType, final Object value)
+        throws EFapsException
+    {
+        String ret;
+        switch (fieldType) {
+            case DATETIME:
+                // dateTimes are stored without a timezone in the database ->
+                // therefore the given datetime must be converted to the timezone of the database
+                if (value instanceof OffsetDateTime) {
+                    ret = ((OffsetDateTime) value).atZoneSameInstant(DateTimeUtil.getDBZoneId()).toLocalDateTime()
+                                    .toString();
+                } else {
+                    ret = Objects.toString(value);
+                }
+                break;
+            default:
+                ret = Objects.toString(value);
         }
         return ret;
     }

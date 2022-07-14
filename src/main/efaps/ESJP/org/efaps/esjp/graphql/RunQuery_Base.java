@@ -19,6 +19,7 @@ package org.efaps.esjp.graphql;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.efaps.admin.event.Parameter;
 import org.efaps.admin.event.Return;
@@ -52,7 +53,10 @@ public abstract class RunQuery_Base
             .append("</style><div id='result'>");
 
         try {
-            final String query = _parameter.getParameterValue(CIFormGraphQL.GraphQL_RunQueryForm.query.name);
+            String query = _parameter.getParameterValue(CIFormGraphQL.GraphQL_RunQueryForm.query.name);
+            if (StringUtils.isEmpty(query)) {
+                query = "{ __schema { types { name fields { name } } } }";
+            }
             final var result = new EFapsGraphQL().query(query);
             LOG.info("{}", result);
             html.append(result);
