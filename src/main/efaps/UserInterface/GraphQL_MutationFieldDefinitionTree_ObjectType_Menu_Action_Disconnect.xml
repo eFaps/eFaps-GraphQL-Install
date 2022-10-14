@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
  Copyright 2003 - 2020 The eFaps Team
 
@@ -15,23 +14,16 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 
--->
-<ui-menu xmlns="http://www.efaps.org/xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>092293bf-931e-418e-8677-5cdadff33182</uuid>
+--><ui-command xmlns="http://www.efaps.org/xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
+    <uuid>f07ebf10-d06e-43b9-b38c-bccf1f903b40</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_MyDesk</name>
-        <childs>
-            <child>GraphQL_EntryPointFieldDefinitionMyDesk</child>
-            <child>GraphQL_MutationFieldDefinitionMyDesk</child>
-            <child>GraphQL_ObjectTypeMyDesk</child>
-            <child>GraphQL_RunQueryMyDesk</child>
-        </childs>
-        <parents>
-            <parent>Admin_Common_MyDesk</parent>
-        </parents>
+        <name>GraphQL_MutationFieldDefinitionTree_ObjectType_Menu_Action_Disconnect</name>
+        <target>
+            <execute program="org.efaps.esjp.common.uitable.CommonDelete"/>
+        </target>
+        <property name="AskUser">true</property>
+        <property name="Submit">true</property>
     </definition>
-</ui-menu>
+</ui-command>

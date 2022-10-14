@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
- Copyright 2003 - 2020 The eFaps Team
+ Copyright 2003 - 2022 The eFaps Team
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,23 +14,14 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 
--->
-<ui-menu xmlns="http://www.efaps.org/xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>092293bf-931e-418e-8677-5cdadff33182</uuid>
+--><ui-menu xmlns="http://www.efaps.org/xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
+    <uuid>18e89de5-cf90-4de9-bbbe-91de61092542</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_MyDesk</name>
+        <name>GraphQL_MutationFieldDefinitionMyDesk_Menu</name>
         <childs>
-            <child>GraphQL_EntryPointFieldDefinitionMyDesk</child>
-            <child>GraphQL_MutationFieldDefinitionMyDesk</child>
-            <child>GraphQL_ObjectTypeMyDesk</child>
-            <child>GraphQL_RunQueryMyDesk</child>
+            <child>GraphQL_MutationFieldDefinitionMyDesk_Menu_Action</child>
         </childs>
-        <parents>
-            <parent>Admin_Common_MyDesk</parent>
-        </parents>
     </definition>
 </ui-menu>
