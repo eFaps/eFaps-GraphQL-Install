@@ -87,6 +87,8 @@ public abstract class BaseDataFetcher_Base
         properties.putAll(props);
         final Map<Integer, String> types = PropertiesUtil.analyseProperty(properties, "Type", 0);
         final Map<Integer, String> linkFroms = PropertiesUtil.analyseProperty(properties, "LinkFrom", 0);
+        final Map<Integer, String> staticKeys = PropertiesUtil.analyseProperty(properties, "StaticKey", 0);
+        final Map<Integer, String> staticValues = PropertiesUtil.analyseProperty(properties, "StaticValue", 0);
 
         final var localContext = getLocalContext(_environment);
 
@@ -171,8 +173,13 @@ public abstract class BaseDataFetcher_Base
             final var eval = print.evaluate();
             while (eval.next()) {
                 final var map = new HashMap<String, Object>();
+                for (final var entry: staticKeys.entrySet()) {
+                    map.put(entry.getValue(), staticValues.get(entry.getKey()));
+                }
                 for (final var selectedField : _environment.getSelectionSet().getFields()) {
-                    map.put(selectedField.getName(), eval.get(selectedField.getName()));
+                    if (!map.containsKey(selectedField.getName())) {
+                        map.put(selectedField.getName(), eval.get(selectedField.getName()));
+                    }
                 }
                 map.put("currentInstance", eval.inst());
                 values.add(map);
