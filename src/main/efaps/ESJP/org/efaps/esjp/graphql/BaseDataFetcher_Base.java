@@ -30,6 +30,7 @@ import org.efaps.admin.program.esjp.EFapsApplication;
 import org.efaps.admin.program.esjp.EFapsUUID;
 import org.efaps.db.Instance;
 import org.efaps.eql.EQL;
+import org.efaps.eql.builder.Print;
 import org.efaps.eql.builder.Where;
 import org.efaps.eql2.EQL2;
 import org.efaps.eql2.IWhereElementTerm;
@@ -100,89 +101,113 @@ public abstract class BaseDataFetcher_Base
         final Optional<ObjectDef> objectDefOpt = _environment.getGraphQlContext().getOrEmpty(graphTypeName);
         if (objectDefOpt.isPresent()) {
             final var objectDef = objectDefOpt.get();
-            final var query = EQL.builder().print().query(types.values().toArray(new String[types.values().size()]));
-            Where where = null;
-            if (!linkFroms.isEmpty()) {
-                final Instance parentInstance = (Instance) ((Map<?, ?>) _environment.getSource())
-                                .get("currentInstance");
-                if (InstanceUtils.isValid(parentInstance)) {
-                    where = query.where();
-                    where.attr(linkFroms.values().iterator().next()).eq(parentInstance);
-                }
-            }
-            for (final var entry : _environment.getArguments().entrySet()) {
-                final var argDefOpt = argumentDefs.stream().filter(en -> en.getName().equals(entry.getKey()))
-                                .findFirst();
-                if (argDefOpt.isPresent()) {
-                    final var argDef = argDefOpt.get();
-                    if (where == null) {
+            Print print = null;
+            if (!types.isEmpty()) {
+                final var query = EQL.builder().print()
+                                .query(types.values().toArray(new String[types.values().size()]));
+                Where where = null;
+                if (!linkFroms.isEmpty()) {
+                    final Instance parentInstance = (Instance) ((Map<?, ?>) _environment.getSource())
+                                    .get("currentInstance");
+                    if (InstanceUtils.isValid(parentInstance)) {
                         where = query.where();
-                    } else {
-                        where.and();
+                        where.attr(linkFroms.values().iterator().next()).eq(parentInstance);
                     }
+                }
+                for (final var entry : _environment.getArguments().entrySet()) {
+                    final var argDefOpt = argumentDefs.stream().filter(en -> en.getName().equals(entry.getKey()))
+                                    .findFirst();
+                    if (argDefOpt.isPresent()) {
+                        final var argDef = argDefOpt.get();
+                        if (where == null) {
+                            where = query.where();
+                        } else {
+                            where.and();
+                        }
 
-                    final var stmt = (PrintQueryStatement) EQL2.parse("print query type TYPE where "
-                                    + String.format(argDef.getWhereStmt(), entry.getValue())
-                                    + " select attribute[OID]");
-                    final var tmp = where.attr(((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0))
-                                    .element().getAttribute());
+                        final var stmt = (PrintQueryStatement) EQL2.parse("print query type TYPE where "
+                                        + String.format(argDef.getWhereStmt(), entry.getValue())
+                                        + " select attribute[OID]");
+                        final var tmp = where.attr(((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0))
+                                        .element().getAttribute());
 
-                    final var value = convertArgument(argDef.getFieldType(), entry.getValue());
-                    switch (((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0)).element().getComparison()) {
-                        case EQUAL:
-                            tmp.eq(value);
-                            break;
-                        case GREATER:
-                            tmp.greater(value);
-                            break;
-                        case GREATEREQ:
-                            tmp.greaterOrEq(value);
-                            break;
-                        case LESS:
-                            tmp.less(value);
-                            break;
-                        case LESSEQ:
-                            tmp.lessOrEq(value);
-                            break;
-                        case LIKE:
-                            tmp.like(value);
-                            break;
-                        case IN:
-                            tmp.in(value);
-                            break;
-                        case NOTIN:
-                            tmp.notin(value);
-                            break;
-                        case UNEQUAL:
-                            tmp.uneq(value);
-                            break;
-                        default:
-                            Log.error("Not working");
+                        final var value = convertArgument(argDef.getFieldType(), entry.getValue());
+                        switch (((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0)).element()
+                                        .getComparison()) {
+                            case EQUAL:
+                                tmp.eq(value);
+                                break;
+                            case GREATER:
+                                tmp.greater(value);
+                                break;
+                            case GREATEREQ:
+                                tmp.greaterOrEq(value);
+                                break;
+                            case LESS:
+                                tmp.less(value);
+                                break;
+                            case LESSEQ:
+                                tmp.lessOrEq(value);
+                                break;
+                            case LIKE:
+                                tmp.like(value);
+                                break;
+                            case IN:
+                                tmp.in(value);
+                                break;
+                            case NOTIN:
+                                tmp.notin(value);
+                                break;
+                            case UNEQUAL:
+                                tmp.uneq(value);
+                                break;
+                            default:
+                                Log.error("Not working");
+                        }
+                    }
+                }
+                print = query.select();
+            } else {
+                // if the type is empty --> check if we got a list of instances
+                // or one instance
+                final var selectValue = ((Map<?, ?>) _environment.getSource()).get(fieldName);
+                if (selectValue != null) {
+                    if (selectValue instanceof List) {
+                        @SuppressWarnings("unchecked")
+                        final var instances = ((List<Instance>) selectValue).stream()
+                                        .filter(Objects::nonNull)
+                                        .toArray(Instance[]::new);
+                        if (instances.length > 0) {
+                            print = EQL.builder().print(instances);
+                        }
+                    } else if (selectValue instanceof Instance) {
+                        print = EQL.builder().print((Instance) selectValue);
                     }
                 }
             }
-            final var print = query.select();
-            for (final var selectedField : _environment.getSelectionSet().getFields()) {
-                if (objectDef.getFields().containsKey(selectedField.getName())) {
-                    final FieldDef fieldDef = objectDef.getFields().get(selectedField.getName());
-                    if (StringUtils.isNotBlank(fieldDef.getSelect())) {
-                        print.select(fieldDef.getSelect()).as(selectedField.getName());
-                    }
-                }
-            }
-            final var eval = print.evaluate();
-            while (eval.next()) {
-                final var map = new HashMap<String, Object>();
-                for (final var entry: staticKeys.entrySet()) {
-                    map.put(entry.getValue(), staticValues.get(entry.getKey()));
-                }
+            if (print != null) {
                 for (final var selectedField : _environment.getSelectionSet().getFields()) {
-                    if (!map.containsKey(selectedField.getName())) {
-                        map.put(selectedField.getName(), eval.get(selectedField.getName()));
+                    if (objectDef.getFields().containsKey(selectedField.getName())) {
+                        final FieldDef fieldDef = objectDef.getFields().get(selectedField.getName());
+                        if (StringUtils.isNotBlank(fieldDef.getSelect())) {
+                            print.select(fieldDef.getSelect()).as(selectedField.getName());
+                        }
                     }
                 }
-                map.put("currentInstance", eval.inst());
-                values.add(map);
+                final var eval = print.evaluate();
+                while (eval.next()) {
+                    final var map = new HashMap<String, Object>();
+                    for (final var entry : staticKeys.entrySet()) {
+                        map.put(entry.getValue(), staticValues.get(entry.getKey()));
+                    }
+                    for (final var selectedField : _environment.getSelectionSet().getFields()) {
+                        if (!map.containsKey(selectedField.getName())) {
+                            map.put(selectedField.getName(), eval.get(selectedField.getName()));
+                        }
+                    }
+                    map.put("currentInstance", eval.inst());
+                    values.add(map);
+                }
             }
         }
         return resultBldr.data(values)
@@ -208,7 +233,8 @@ public abstract class BaseDataFetcher_Base
         switch (fieldType) {
             case DATETIME:
                 // dateTimes are stored without a timezone in the database ->
-                // therefore the given datetime must be converted to the timezone of the database
+                // therefore the given datetime must be converted to the
+                // timezone of the database
                 if (value instanceof OffsetDateTime) {
                     ret = ((OffsetDateTime) value).atZoneSameInstant(DateTimeUtil.getDBZoneId()).toLocalDateTime()
                                     .toString();
