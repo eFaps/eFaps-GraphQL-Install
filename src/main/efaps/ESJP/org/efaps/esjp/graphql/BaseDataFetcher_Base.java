@@ -67,7 +67,7 @@ public abstract class BaseDataFetcher_Base
     public Object get(final DataFetchingEnvironment _environment)
         throws Exception
     {
-        LOG.info("Running BaseDataFetcher with: {}", _environment);
+        LOG.debug("Running BaseDataFetcher with: {}", _environment);
         final var resultBldr = DataFetcherResult.newResult();
         final List<Map<String, Object>> values = new ArrayList<>();
         final var fieldName = _environment.getFieldDefinition().getName();
