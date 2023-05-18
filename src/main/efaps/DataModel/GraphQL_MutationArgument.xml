@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
- Copyright 2003 - 2020 The eFaps Team
+ Copyright 2003 - 2023 The eFaps Team
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -18,14 +18,14 @@
 <datamodel-type xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>b01cd270-95ec-4280-ba9b-53e2f95e4e7e</uuid>
+    <uuid>c1004bc1-76f7-42ca-bc20-8a517abc17cf</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_Argument</name>
+        <name>GraphQL_MutationArgument</name>
         <parent>GraphQL_ArgumentAbstract</parent>
         <attribute>
-            <name>WhereStmt</name>
+            <name>Key</name>
             <type>String</type>
             <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>STR1</sqlcolumn>

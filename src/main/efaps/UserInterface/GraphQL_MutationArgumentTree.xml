@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
- Copyright 2003 - 2022 The eFaps Team
+ Copyright 2003 - 2023 The eFaps Team
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -14,22 +14,20 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 
---><ui-menu xmlns="http://www.efaps.org/xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>90a19145-c24d-489a-a78a-b2ffae450851</uuid>
+-->
+<ui-menu xmlns="http://www.efaps.org/xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
+    <uuid>6cad9cad-569d-4501-a4d3-8d45f5a31a05</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_MutationFieldDefinitionTree</name>
+        <name>GraphQL_MutationArgumentTree</name>
         <target>
-            <menu>GraphQL_MutationFieldDefinitionTree_Menu</menu>
-            <form>GraphQL_MutationFieldDefinitionForm</form>
+            <menu>GraphQL_MutationArgumentTree_Menu</menu>
+            <form>GraphQL_MutationArgumentForm</form>
         </target>
-        <type>GraphQL_MutationFieldDefinition</type>
-        <childs>
-            <child>GraphQL_MutationFieldDefinitionTree_Arguments</child>
-            <child>GraphQL_MutationFieldDefinitionTree_ObjectType</child>
-            <child>GraphQL_FieldDefinitionTree_DataFetcher</child>
-        </childs>
+        <type>GraphQL_MutationArgument</type>
         <property name="Target">content</property>
         <property name="TargetMode">view</property>
     </definition>

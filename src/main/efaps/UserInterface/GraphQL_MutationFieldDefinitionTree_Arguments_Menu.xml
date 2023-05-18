@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
- Copyright 2003 - 2020 The eFaps Team
+ Copyright 2003 - 2023 The eFaps Team
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,20 +15,15 @@
  limitations under the License.
 
 -->
-<datamodel-type xmlns="http://www.efaps.org/xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<ui-menu xmlns="http://www.efaps.org/xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>b01cd270-95ec-4280-ba9b-53e2f95e4e7e</uuid>
+    <uuid>6b6a058f-4c12-4eb0-8692-f0f35babec74</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_Argument</name>
-        <parent>GraphQL_ArgumentAbstract</parent>
-        <attribute>
-            <name>WhereStmt</name>
-            <type>String</type>
-            <sqltable>GraphQL_ElementSQLTable</sqltable>
-            <sqlcolumn>STR1</sqlcolumn>
-        </attribute>
+        <name>GraphQL_MutationFieldDefinitionTree_Arguments_Menu</name>
+        <childs>
+            <child>GraphQL_MutationFieldDefinitionTree_Arguments_Menu_Action</child>
+        </childs>
     </definition>
-</datamodel-type>
+</ui-menu>

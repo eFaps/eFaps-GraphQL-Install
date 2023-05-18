@@ -15,20 +15,21 @@
  limitations under the License.
 
 -->
-<datamodel-type xmlns="http://www.efaps.org/xsd"
+<ui-command xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>b01cd270-95ec-4280-ba9b-53e2f95e4e7e</uuid>
+    <uuid>c85f6f24-8831-4bb7-8b45-10a69c41b867</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_Argument</name>
-        <parent>GraphQL_ArgumentAbstract</parent>
-        <attribute>
-            <name>WhereStmt</name>
-            <type>String</type>
-            <sqltable>GraphQL_ElementSQLTable</sqltable>
-            <sqlcolumn>STR1</sqlcolumn>
-        </attribute>
+        <name>GraphQL_MutationArgumentTree_Menu_Action_Edit</name>
+        <target>
+            <form>GraphQL_MutationArgumentForm</form>
+            <execute program="org.efaps.esjp.common.uiform.Edit" />
+        </target>
+        <property name="Target">modal</property>
+        <property name="TargetMode">edit</property>
+        <property name="WindowHeight">460</property>
+        <property name="WindowWidth">515</property>
     </definition>
-</datamodel-type>
+</ui-command>

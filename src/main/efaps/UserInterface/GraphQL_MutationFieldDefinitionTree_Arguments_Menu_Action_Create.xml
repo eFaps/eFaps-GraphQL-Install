@@ -15,20 +15,19 @@
  limitations under the License.
 
 -->
-<datamodel-type xmlns="http://www.efaps.org/xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>b01cd270-95ec-4280-ba9b-53e2f95e4e7e</uuid>
+<ui-command xmlns="http://www.efaps.org/xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
+    <uuid>075e0f04-8bef-4ef5-bfa8-9151388131b0</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_Argument</name>
-        <parent>GraphQL_ArgumentAbstract</parent>
-        <attribute>
-            <name>WhereStmt</name>
-            <type>String</type>
-            <sqltable>GraphQL_ElementSQLTable</sqltable>
-            <sqlcolumn>STR1</sqlcolumn>
-        </attribute>
+        <name>GraphQL_MutationFieldDefinitionTree_Arguments_Menu_Action_Create</name>
+        <target>
+            <form>GraphQL_MutationArgumentForm</form>
+            <execute program="org.efaps.esjp.common.uiform.Create"/>
+        </target>
+        <property name="Target">modal</property>
+        <property name="TargetCreateType">GraphQL_MutationArgument</property>
+        <property name="TargetConnectAttribute">GraphQL_ArgumentAbstract/FieldLink</property>
+        <property name="TargetMode">create</property>
     </definition>
-</datamodel-type>
+</ui-command>

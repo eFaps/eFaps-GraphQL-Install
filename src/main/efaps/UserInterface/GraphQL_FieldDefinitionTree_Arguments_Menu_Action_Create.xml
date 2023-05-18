@@ -30,7 +30,7 @@
         </target>
         <property name="Target">modal</property>
         <property name="TargetCreateType">GraphQL_Argument</property>
-        <property name="TargetConnectAttribute">GraphQL_Argument/FieldLink</property>
+        <property name="TargetConnectAttribute">GraphQL_ArgumentAbstract/FieldLink</property>
         <property name="TargetMode">create</property>
     </definition>
 </ui-command>
