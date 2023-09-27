@@ -18,17 +18,18 @@
 <ui-command xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>ad39713b-0fb6-41bf-8746-935aebecb04c</uuid>
+    <uuid>893a79f6-2eb5-4e27-a893-a3b177bfffd3</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_ObjectTypeMyDesk_Menu_Action_Create</name>
+        <name>GraphQL_InputObjectTypeSearch</name>
         <target>
             <form>GraphQL_ObjectTypeForm</form>
-            <execute program="org.efaps.esjp.common.uiform.Create" />
+            <table>GraphQL_ObjectTypeTable</table>
+            <evaluate program="org.efaps.esjp.common.uisearch.Search">
+                <property name="Type">GraphQL_InputObjectType</property>
+            </evaluate>
         </target>
-        <property name="Target">modal</property>
-        <property name="TargetCreateType">GraphQL_ObjectType</property>
-        <property name="TargetMode">create</property>
+        <property name="TargetMode">search</property>
     </definition>
 </ui-command>

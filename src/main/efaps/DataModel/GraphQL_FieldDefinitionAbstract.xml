@@ -32,11 +32,18 @@
             <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>INT1</sqlcolumn>
         </attribute>
-         <attribute>
+        <attribute>
             <name>Select</name>
             <type>String</type>
             <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>STR1</sqlcolumn>
+        </attribute>
+        <attribute>
+            <name>Required</name>
+            <type>Boolean</type>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
+            <sqlcolumn>BOOL1</sqlcolumn>
+            <defaultvalue>false</defaultvalue>
         </attribute>
     </definition>
 </datamodel-type>

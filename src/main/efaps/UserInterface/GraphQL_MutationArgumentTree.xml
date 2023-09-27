@@ -28,6 +28,9 @@
             <form>GraphQL_MutationArgumentForm</form>
         </target>
         <type>GraphQL_MutationArgument</type>
+        <childs>
+            <child>GraphQL_MutationArgumentTree_ObjectType</child>
+        </childs>
         <property name="Target">content</property>
         <property name="TargetMode">view</property>
     </definition>

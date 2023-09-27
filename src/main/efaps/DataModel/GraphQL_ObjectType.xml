@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
- Copyright 2003 - 2020 The eFaps Team
+ Copyright 2003 - 2023 The eFaps Team
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -23,6 +23,6 @@
     <definition>
         <version-expression>(version==latest)</version-expression>
         <name>GraphQL_ObjectType</name>
-        <parent>GraphQL_ElementAbstract</parent>
+        <parent>GraphQL_AbstractObjectType</parent>
     </definition>
 </datamodel-type>

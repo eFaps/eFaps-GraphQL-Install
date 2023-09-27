@@ -31,12 +31,10 @@
             <table>GraphQL_ObjectTypeTable</table>
             <evaluate
                 program="org.efaps.esjp.common.uitable.MultiPrint">
-                <property name="Type">GraphQL_ObjectType</property>
+                <property name="Type">GraphQL_AbstractObjectType</property>
             </evaluate>
         </target>
-        <!-- properties -->
         <property name="Target">content</property>
         <property name="TargetShowCheckBoxes">true</property>
-
     </definition>
 </ui-command>

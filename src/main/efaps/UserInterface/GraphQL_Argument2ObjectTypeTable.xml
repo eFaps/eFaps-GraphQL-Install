@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
- Copyright 2003 - 2020 The eFaps Team
+ Copyright 2003 - 2023 The eFaps Team
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -18,32 +18,27 @@
 <ui-table xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>8120dc3e-a917-41fe-afee-02c907de2585</uuid>
+    <uuid>57adbe9a-d692-4ac6-8d24-5ee4df04008b</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_FieldDefinition2DataFetcherTable</name>
+        <name>GraphQL_Argument2ObjectTypeTable</name>
         <field name="type">
-            <property name="SelectAlternateOID">linkto[FromLink].oid</property>
-            <property name="Select">linkto[FromLink].attribute[Type].label</property>
-            <property name="Label">GraphQL_DataFetcher/Type.Label</property>
+            <property name="SelectAlternateOID">linkto[ToLink].oid</property>
+            <property name="Select">linkto[ToLink].attribute[Type].label</property>
+            <property name="Label">GraphQL_ObjectType/Type.Label</property>
             <property name="ModeSearch">READONLY</property>
             <property name="HRef">TREE</property>
             <property name="UIProvider">org.efaps.admin.datamodel.ui.StringUI</property>
         </field>
         <field name="name">
-            <property name="Select">linkto[FromLink].attribute[Name]</property>
-            <property name="Label">GraphQL_DataFetcher/Name.Label</property>
+            <property name="Select">linkto[ToLink].attribute[Name]</property>
+            <property name="Label">GraphQL_ObjectType/Name.Label</property>
             <property name="ModeSearch">READONLY</property>
         </field>
         <field name="description">
-            <property name="Select">linkto[FromLink].attribute[Description]</property>
-            <property name="Label">GraphQL_DataFetcher/Description.Label</property>
-            <property name="ModeSearch">READONLY</property>
-        </field>
-        <field name="className">
-            <property name="Select">linkto[FromLink].attribute[ClassName]</property>
-            <property name="Label">GraphQL_DataFetcher/ClassName.Label</property>
+            <property name="Select">linkto[ToLink].attribute[Description]</property>
+            <property name="Label">GraphQL_ObjectType/Description.Label</property>
             <property name="ModeSearch">READONLY</property>
         </field>
     </definition>

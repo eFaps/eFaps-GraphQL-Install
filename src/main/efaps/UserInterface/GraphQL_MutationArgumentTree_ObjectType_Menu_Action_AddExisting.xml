@@ -18,17 +18,20 @@
 <ui-command xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>ad39713b-0fb6-41bf-8746-935aebecb04c</uuid>
+    <uuid>29756782-632e-49b9-86a0-b99086fc0d68</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_ObjectTypeMyDesk_Menu_Action_Create</name>
+        <name>GraphQL_MutationArgumentTree_ObjectType_Menu_Action_AddExisting</name>
         <target>
-            <form>GraphQL_ObjectTypeForm</form>
-            <execute program="org.efaps.esjp.common.uiform.Create" />
+            <search>GraphQL_MutationArgumentTree_ObjectType_Menu_Action_AddExistingSearch</search>
+            <execute program="org.efaps.esjp.common.uisearch.Connect">
+                <property name="ConnectType">GraphQL_MutationArgument2ObjectType</property>
+                <property name="ConnectParentAttribute">FromLink</property>
+                <property name="ConnectChildAttribute">ToLink</property>
+            </execute>
         </target>
         <property name="Target">modal</property>
-        <property name="TargetCreateType">GraphQL_ObjectType</property>
-        <property name="TargetMode">create</property>
+        <property name="TargetCmdRevise">true</property>
     </definition>
 </ui-command>

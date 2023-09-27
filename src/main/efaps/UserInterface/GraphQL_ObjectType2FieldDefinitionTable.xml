@@ -33,13 +33,11 @@
         </field>
         <field name="name">
             <property name="Select">linkto[ToLink].attribute[Name]</property>
-            <property name="Attribute">Name</property>
             <property name="Label">GraphQL_FieldDefinition/Name.Label</property>
             <property name="ModeSearch">READONLY</property>
         </field>
         <field name="description">
             <property name="Select">linkto[ToLink].attribute[Description]</property>
-            <property name="Attribute">Description</property>
             <property name="Label">GraphQL_FieldDefinition/Description.Label</property>
             <property name="ModeSearch">READONLY</property>
         </field>

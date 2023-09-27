@@ -28,7 +28,7 @@
             <menu>GraphQL_ObjectTypeTree_Menu</menu>
             <form>GraphQL_ObjectTypeForm</form>
         </target>
-        <type>GraphQL_ObjectType</type>
+        <type>GraphQL_AbstractObjectType</type>
         <childs>
             <child>GraphQL_ObjectTypeTree_Fields</child>
         </childs>
