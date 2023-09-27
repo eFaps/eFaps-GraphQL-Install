@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
- Copyright 2003 - 2020 The eFaps Team
+ Copyright 2003 - 2023 The eFaps Team
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -16,23 +15,27 @@
  limitations under the License.
 
 -->
-<ui-menu xmlns="http://www.efaps.org/xsd"
+<datamodel-type xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>cdb90666-1917-4118-b547-b7ab74299379</uuid>
+    <uuid>67d4e1f0-7132-4af3-be5d-1db5a4ea4802</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_ObjectTypeTree</name>
-        <target>
-            <menu>GraphQL_ObjectTypeTree_Menu</menu>
-            <form>GraphQL_ObjectTypeForm</form>
-        </target>
-        <type>GraphQL_ObjectType</type>
-        <childs>
-            <child>GraphQL_ObjectTypeTree_Fields</child>
-        </childs>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
+        <name>GraphQL_InputFieldDefinition</name>
+        <parent>GraphQL_FieldDefinitionAbstract</parent>
+        <attribute>
+            <name>Required</name>
+            <type>Boolean</type>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
+            <sqlcolumn>BOOL1</sqlcolumn>
+            <defaultvalue>false</defaultvalue>
+        </attribute>
+         <attribute>
+            <name>DefaultValue</name>
+            <type>String</type>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
+            <sqlcolumn>STR2</sqlcolumn>
+        </attribute>
     </definition>
-</ui-menu>
+</datamodel-type>

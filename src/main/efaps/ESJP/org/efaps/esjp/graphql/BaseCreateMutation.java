@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLInputObjectType;
+import graphql.schema.GraphQLNonNull;
 import graphql.schema.GraphQLScalarType;
 
 @EFapsUUID("c99ee1a6-2967-4cdb-a788-b6aa2630e52b")
@@ -78,7 +79,7 @@ public class BaseCreateMutation
                 if (inputObject.containsKey(fieldName)) {
                     final var inputFieldType = inputObjectType.getField(fieldName).getType();
                     // if it is a simple type
-                    if (inputFieldType instanceof GraphQLScalarType) {
+                    if (inputFieldType instanceof GraphQLScalarType || inputFieldType instanceof GraphQLNonNull) {
                         values.put(entry.getValue().getSelect(), inputObject.get(fieldName));
                     }
                 }

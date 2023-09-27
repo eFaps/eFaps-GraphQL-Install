@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
- Copyright 2003 - 2020 The eFaps Team
+ Copyright 2003 - 2023 The eFaps Team
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -16,23 +15,21 @@
  limitations under the License.
 
 -->
-<ui-menu xmlns="http://www.efaps.org/xsd"
+<ui-command xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>cdb90666-1917-4118-b547-b7ab74299379</uuid>
+    <uuid>eb704653-bd22-4059-bfcd-7bd5bdb12d61</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_ObjectTypeTree</name>
+        <name>GraphQL_InputFieldDefinitionTree_Menu_Action_Edit</name>
         <target>
-            <menu>GraphQL_ObjectTypeTree_Menu</menu>
-            <form>GraphQL_ObjectTypeForm</form>
+            <form>GraphQL_InputFieldDefinitionForm</form>
+            <execute program="org.efaps.esjp.common.uiform.Edit" />
         </target>
-        <type>GraphQL_ObjectType</type>
-        <childs>
-            <child>GraphQL_ObjectTypeTree_Fields</child>
-        </childs>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
+        <property name="Target">modal</property>
+        <property name="TargetMode">edit</property>
+        <property name="WindowHeight">460</property>
+        <property name="WindowWidth">515</property>
     </definition>
-</ui-menu>
+</ui-command>

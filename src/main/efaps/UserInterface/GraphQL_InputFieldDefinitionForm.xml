@@ -14,15 +14,12 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 
--->
-<ui-form xmlns="http://www.efaps.org/xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>efe598d2-8449-4dad-8dda-28ea3c829f73</uuid>
+--><ui-form xmlns="http://www.efaps.org/xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
+    <uuid>fea75862-5c95-48b0-9510-5a87d0c0f367</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_FieldDefinitionForm</name>
+        <name>GraphQL_InputFieldDefinitionForm</name>
         <field name="name">
             <property name="ModeCreate">EDITABLE</property>
             <property name="ModeSearch">EDITABLE</property>
@@ -49,6 +46,18 @@
             <property name="ModeSearch">EDITABLE</property>
             <property name="ModeEdit">EDITABLE</property>
             <property name="Attribute">Select</property>
+        </field>
+        <field name="required">
+            <property name="ModeCreate">EDITABLE</property>
+            <property name="ModeSearch">EDITABLE</property>
+            <property name="ModeEdit">EDITABLE</property>
+            <property name="Attribute">Required</property>
+        </field>
+         <field name="defaultValue">
+            <property name="ModeCreate">EDITABLE</property>
+            <property name="ModeSearch">EDITABLE</property>
+            <property name="ModeEdit">EDITABLE</property>
+            <property name="Attribute">DefaultValue</property>
         </field>
         <field character="Group" name="createGroup">
             <property name="GroupCount">2</property>

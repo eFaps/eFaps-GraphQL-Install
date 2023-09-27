@@ -38,8 +38,14 @@
             <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>STR1</sqlcolumn>
         </attribute>
+         <attribute>
+            <name>String2</name>
+            <type>String</type>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
+            <sqlcolumn>STR2</sqlcolumn>
+        </attribute>
         <attribute>
-            <name>Required</name>
+            <name>Boolean1</name>
             <type>Boolean</type>
             <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>BOOL1</sqlcolumn>
