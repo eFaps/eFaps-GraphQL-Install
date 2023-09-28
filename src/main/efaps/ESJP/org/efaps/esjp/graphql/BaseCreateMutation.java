@@ -16,11 +16,14 @@
  */
 package org.efaps.esjp.graphql;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
+import org.efaps.admin.datamodel.AttributeSet;
 import org.efaps.admin.datamodel.Type;
 import org.efaps.admin.program.esjp.EFapsApplication;
 import org.efaps.admin.program.esjp.EFapsUUID;
@@ -39,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLInputObjectType;
+import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLNonNull;
 import graphql.schema.GraphQLScalarType;
 
@@ -58,8 +62,7 @@ public class BaseCreateMutation
         final var values = evalArgumentValues(environment);
         final var props = getProperties(environment);
         final var createType = evalCreateType(props);
-        final var insert = createInsert(createType, values);
-        final var inst = execute(insert);
+        final var inst = executeStmt(createType, values);
         return inst == null ? null : inst.getOid();
     }
 
@@ -70,6 +73,14 @@ public class BaseCreateMutation
         final var inputObjectType = (GraphQLInputObjectType) environment.getFieldDefinition()
                         .getArguments().get(0).getType();
         final var inputObject = environment.<Map<String, Object>>getArgument(inputVariableName);
+        return evalValues(environment, inputObjectType, inputObject);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected HashMap<String, Object> evalValues(final DataFetchingEnvironment environment,
+                                                 final GraphQLInputObjectType inputObjectType,
+                                                 final Map<String, Object> inputObject)
+    {
         final var values = new HashMap<String, Object>();
         final var objectDefOpt = environment.getGraphQlContext().<ObjectDef>getOrEmpty(inputObjectType.getName());
         if (objectDefOpt.isPresent()) {
@@ -82,10 +93,22 @@ public class BaseCreateMutation
                     if (inputFieldType instanceof GraphQLScalarType || inputFieldType instanceof GraphQLNonNull) {
                         values.put(entry.getValue().getSelect(), inputObject.get(fieldName));
                     }
+                    if (inputFieldType instanceof GraphQLList) {
+                        final var wrappedType = ((GraphQLList) inputFieldType).getWrappedType();
+                        if (wrappedType instanceof GraphQLInputObjectType) {
+                            final var valueList = new ArrayList<Map<String, Object>>();
+                            for (final var listEntry : (List<?>) inputObject.get(fieldName)) {
+                                valueList.add(evalValues(environment, (GraphQLInputObjectType) wrappedType,
+                                                (Map<String, Object>) listEntry));
+                            }
+                            values.put(entry.getValue().getSelect(), valueList);
+                        } else {
+                            LOG.error("What???");
+                        }
+                    }
                 }
             }
         }
-        LOG.debug("-> {}", values);
         return values;
     }
 
@@ -116,24 +139,53 @@ public class BaseCreateMutation
         return ret;
     }
 
-    protected Insert createInsert(final Type type,
-                                  final Map<String, Object> values)
+    @SuppressWarnings("unchecked")
+    protected Instance executeStmt(final Type type,
+                                   final Map<String, Object> values)
         throws EFapsException
     {
-        final var eql = EQL.builder().insert(type);
+        LOG.debug("Execute base stmt");
+        final var stmt = EQL.builder().insert(type);
         for (final var entry : values.entrySet()) {
             final var field = entry.getKey().trim();
             if (field.startsWith("attribute[")) {
                 final String attrName = field.substring(10, field.length() - 1);
-                eql.set(attrName, Converter.convert(entry.getValue()));
+                stmt.set(attrName, Converter.convert(entry.getValue()));
             }
         }
-        return eql;
+        final var inst = stmt.execute();
+        for (final var entry : values.entrySet()) {
+            final var field = entry.getKey().trim();
+            if (field.startsWith("attributeset[")) {
+                for (final var valuesEntry : (List<Map<String, Object>>) entry.getValue()) {
+                    executeStmt(inst, field, valuesEntry);
+                }
+            }
+        }
+        return inst;
     }
 
-    protected Instance execute(Insert insert)
+    protected Instance executeStmt(final Instance parentInstance,
+                                   final String select,
+                                   final Map<String, Object> values)
         throws EFapsException
     {
-        return insert.execute();
+
+        Insert stmt = null;
+        if (select.startsWith("attributeset[")) {
+            final String attrName = select.substring(13, select.length() - 1);
+            final var attrSet = AttributeSet.find(parentInstance.getType().getName(), attrName);
+            stmt = EQL.builder().insert(attrSet)
+                            .set(attrName, Converter.convert(parentInstance));
+        }
+
+        for (final var entry : values.entrySet()) {
+            final var field = entry.getKey().trim();
+            if (field.startsWith("attribute[")) {
+                final String attrName = field.substring(10, field.length() - 1);
+                stmt.set(attrName, Converter.convert(entry.getValue()));
+            }
+        }
+        return stmt.execute();
     }
 }

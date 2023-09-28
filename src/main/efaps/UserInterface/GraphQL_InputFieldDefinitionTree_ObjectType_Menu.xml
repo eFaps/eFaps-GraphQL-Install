@@ -18,20 +18,13 @@
 <ui-menu xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>b30275a8-236b-4a34-b1fd-424d82bef6c5</uuid>
+    <uuid>9c6ce92f-e799-4d98-be4b-30f54667133e</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_InputFieldDefinitionTree</name>
-        <target>
-            <menu>GraphQL_InputFieldDefinitionTree_Menu</menu>
-            <form>GraphQL_InputFieldDefinitionForm</form>
-        </target>
-        <type>GraphQL_InputFieldDefinition</type>
+        <name>GraphQL_InputFieldDefinitionTree_ObjectType_Menu</name>
         <childs>
-            <child>GraphQL_InputFieldDefinitionTree_ObjectType</child>
+            <child>GraphQL_InputFieldDefinitionTree_ObjectType_Menu_Action</child>
         </childs>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
     </definition>
 </ui-menu>

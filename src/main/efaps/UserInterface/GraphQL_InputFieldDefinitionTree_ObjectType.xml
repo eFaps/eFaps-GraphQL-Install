@@ -15,23 +15,24 @@
  limitations under the License.
 
 -->
-<ui-menu xmlns="http://www.efaps.org/xsd"
+<ui-command xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>b30275a8-236b-4a34-b1fd-424d82bef6c5</uuid>
+    <uuid>fcc8f355-9081-4d65-940a-a4d9420fe9e3</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_InputFieldDefinitionTree</name>
+        <name>GraphQL_InputFieldDefinitionTree_ObjectType</name>
         <target>
-            <menu>GraphQL_InputFieldDefinitionTree_Menu</menu>
-            <form>GraphQL_InputFieldDefinitionForm</form>
+            <menu>GraphQL_InputFieldDefinitionTree_ObjectType_Menu</menu>
+            <table>GraphQL_FieldDefinition2ObjectTypeTable</table>
+            <evaluate program="org.efaps.esjp.common.uitable.MultiPrint">
+                <property name="Type">GraphQL_InputFieldDefinition2ObjectType</property>
+                <property name="LinkFrom">FromLink</property>
+            </evaluate>
         </target>
-        <type>GraphQL_InputFieldDefinition</type>
-        <childs>
-            <child>GraphQL_InputFieldDefinitionTree_ObjectType</child>
-        </childs>
         <property name="Target">content</property>
         <property name="TargetMode">view</property>
+        <property name="TargetShowCheckBoxes">true</property>
     </definition>
-</ui-menu>
+</ui-command>
