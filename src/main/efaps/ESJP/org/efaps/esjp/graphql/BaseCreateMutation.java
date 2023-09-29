@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.efaps.admin.datamodel.AttributeSet;
 import org.efaps.admin.datamodel.Classification;
@@ -158,6 +159,9 @@ public class BaseCreateMutation
                 final String attrName = field.substring(10, field.length() - 1);
                 stmt.set(attrName, Converter.convert(entry.getValue()));
             }
+            if (field.startsWith("linkto[")) {
+                evalLinkto(type, stmt, entry.getValue(), field);
+            }
         }
         final var inst = stmt.execute();
         for (final var entry : values.entrySet()) {
@@ -180,16 +184,18 @@ public class BaseCreateMutation
         throws EFapsException
     {
 
+        Type type = null;
         Insert stmt = null;
         if (select.startsWith("attributeset[")) {
             final var attrName = select.substring(13, select.length() - 1);
             final var attrSet = AttributeSet.find(parentInstance.getType().getName(), attrName);
             stmt = EQL.builder().insert(attrSet)
                             .set(attrName, Converter.convert(parentInstance));
+            type = attrSet;
         } else if (select.startsWith("class[")) {
             final var classTypeName = select.substring(6, select.length() - 1);
             final var classification = Classification.get(classTypeName);
-
+            type = classification;
             EQL.builder().insert(classification.getClassifyRelationType())
                             .set(classification.getRelLinkAttributeName(), Converter.convert(parentInstance))
                             .set(classification.getRelTypeAttributeName(), Converter.convert(classification.getId()))
@@ -204,7 +210,41 @@ public class BaseCreateMutation
                 final String attrName = field.substring(10, field.length() - 1);
                 stmt.set(attrName, Converter.convert(entry.getValue()));
             }
+            if (field.startsWith("linkto[")) {
+                evalLinkto(type, stmt, entry.getValue(), field);
+            }
         }
         return stmt.execute();
     }
+
+    protected void evalLinkto(final Type type,
+                              final Insert stmt,
+                              Object value,
+                              final String linkto)
+        throws EFapsException
+    {
+        final var linktoPattern = Pattern.compile("linkto\\[([\\w\\d]+).*");
+        final var attrPattern = Pattern.compile("attribute\\[([\\w\\d]+).*");
+        final var linkMatcher = linktoPattern.matcher(linkto);
+        final var attrMatcher = attrPattern.matcher(linkto);
+        linkMatcher.find();
+        attrMatcher.find();
+        final var linkAttrName = linkMatcher.group(1);
+        final var linkAttr = type.getAttribute(linkAttrName);
+        final var linktoType = linkAttr.getLink();
+        final var attrName = attrMatcher.group(1);
+
+        final String crit = String.valueOf(value);
+
+        final var eval = EQL.builder().print()
+                        .query(linktoType.getName())
+                        .where()
+                        .attribute(attrName).eq(crit)
+                        .select().instance()
+                        .evaluate();
+        if (eval.next()) {
+            stmt.set(linkAttrName, Converter.convert(eval.inst()));
+        }
+    }
+
 }
