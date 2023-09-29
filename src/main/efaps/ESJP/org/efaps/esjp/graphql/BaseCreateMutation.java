@@ -24,6 +24,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 import org.efaps.admin.datamodel.AttributeSet;
+import org.efaps.admin.datamodel.Classification;
 import org.efaps.admin.datamodel.Type;
 import org.efaps.admin.program.esjp.EFapsApplication;
 import org.efaps.admin.program.esjp.EFapsUUID;
@@ -106,6 +107,11 @@ public class BaseCreateMutation
                             LOG.error("What???");
                         }
                     }
+                    if (inputFieldType instanceof GraphQLInputObjectType) {
+                        final var fieldValue = evalValues(environment, (GraphQLInputObjectType) inputFieldType,
+                                        (Map<String, Object>) inputObject.get(fieldName));
+                        values.put(entry.getValue().getSelect(), fieldValue);
+                    }
                 }
             }
         }
@@ -161,6 +167,9 @@ public class BaseCreateMutation
                     executeStmt(inst, field, valuesEntry);
                 }
             }
+            if (field.startsWith("class[")) {
+                executeStmt(inst, field, (Map<String, Object>) entry.getValue());
+            }
         }
         return inst;
     }
@@ -173,10 +182,20 @@ public class BaseCreateMutation
 
         Insert stmt = null;
         if (select.startsWith("attributeset[")) {
-            final String attrName = select.substring(13, select.length() - 1);
+            final var attrName = select.substring(13, select.length() - 1);
             final var attrSet = AttributeSet.find(parentInstance.getType().getName(), attrName);
             stmt = EQL.builder().insert(attrSet)
                             .set(attrName, Converter.convert(parentInstance));
+        } else if (select.startsWith("class[")) {
+            final var classTypeName = select.substring(6, select.length() - 1);
+            final var classification = Classification.get(classTypeName);
+
+            EQL.builder().insert(classification.getClassifyRelationType())
+                            .set(classification.getRelLinkAttributeName(), Converter.convert(parentInstance))
+                            .set(classification.getRelTypeAttributeName(), Converter.convert(classification.getId()))
+                            .execute();
+            stmt = EQL.builder().insert(classification)
+                            .set(classification.getLinkAttributeName(), Converter.convert(parentInstance));
         }
 
         for (final var entry : values.entrySet()) {
