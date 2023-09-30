@@ -223,6 +223,7 @@ public class BaseCreateMutation
                               final String linkto)
         throws EFapsException
     {
+        LOG.debug("Evaluating linkto: {}", linkto);
         final var linktoPattern = Pattern.compile("linkto\\[([\\w\\d]+).*");
         final var attrPattern = Pattern.compile("attribute\\[([\\w\\d]+).*");
         final var linkMatcher = linktoPattern.matcher(linkto);
