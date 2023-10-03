@@ -16,13 +16,10 @@
  */
 package org.efaps.esjp.graphql;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 import org.efaps.admin.datamodel.AttributeSet;
 import org.efaps.admin.datamodel.Classification;
@@ -33,25 +30,18 @@ import org.efaps.db.Instance;
 import org.efaps.eql.EQL;
 import org.efaps.eql.builder.Converter;
 import org.efaps.eql.builder.Insert;
-import org.efaps.graphql.definition.ObjectDef;
-import org.efaps.graphql.providers.DataFetcherProvider;
 import org.efaps.util.EFapsException;
 import org.efaps.util.UUIDUtil;
 import org.efaps.util.cache.CacheReloadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
-import graphql.schema.GraphQLInputObjectType;
-import graphql.schema.GraphQLList;
-import graphql.schema.GraphQLNonNull;
-import graphql.schema.GraphQLScalarType;
 
 @EFapsUUID("c99ee1a6-2967-4cdb-a788-b6aa2630e52b")
 @EFapsApplication("eFaps-GraphQL")
 public class BaseCreateMutation
-    implements DataFetcher<Object>
+    extends AbstractMutation
 {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseCreateMutation.class);
@@ -61,79 +51,14 @@ public class BaseCreateMutation
         throws Exception
     {
         LOG.info("Running mutation: {}", this);
-        final var values = evalArgumentValues(environment);
         final var props = getProperties(environment);
+        final var values = evalArgumentValues(environment, props);
         final var createType = evalCreateType(props);
         final var inst = executeStmt(createType, values);
         return inst == null ? null : inst.getOid();
     }
 
-    protected Map<String, Object> evalArgumentValues(final DataFetchingEnvironment environment)
-    {
-        LOG.debug("Evaluating arguments");
-        final var inputVariableName = environment.getFieldDefinition().getArguments().get(0).getName();
-        final var inputObjectType = (GraphQLInputObjectType) environment.getFieldDefinition()
-                        .getArguments().get(0).getType();
-        final var inputObject = environment.<Map<String, Object>>getArgument(inputVariableName);
-        return evalValues(environment, inputObjectType, inputObject);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected HashMap<String, Object> evalValues(final DataFetchingEnvironment environment,
-                                                 final GraphQLInputObjectType inputObjectType,
-                                                 final Map<String, Object> inputObject)
-    {
-        final var values = new HashMap<String, Object>();
-        final var objectDefOpt = environment.getGraphQlContext().<ObjectDef>getOrEmpty(inputObjectType.getName());
-        if (objectDefOpt.isPresent()) {
-            final var objectDef = objectDefOpt.get();
-            for (final var entry : objectDef.getFields().entrySet()) {
-                final var fieldName = entry.getKey();
-                if (inputObject.containsKey(fieldName)) {
-                    final var inputFieldType = inputObjectType.getField(fieldName).getType();
-                    // if it is a simple type
-                    if (inputFieldType instanceof GraphQLScalarType || inputFieldType instanceof GraphQLNonNull) {
-                        values.put(entry.getValue().getSelect(), inputObject.get(fieldName));
-                    }
-                    if (inputFieldType instanceof GraphQLList) {
-                        final var wrappedType = ((GraphQLList) inputFieldType).getWrappedType();
-                        if (wrappedType instanceof GraphQLInputObjectType) {
-                            final var valueList = new ArrayList<Map<String, Object>>();
-                            for (final var listEntry : (List<?>) inputObject.get(fieldName)) {
-                                valueList.add(evalValues(environment, (GraphQLInputObjectType) wrappedType,
-                                                (Map<String, Object>) listEntry));
-                            }
-                            values.put(entry.getValue().getSelect(), valueList);
-                        } else {
-                            LOG.error("What???");
-                        }
-                    }
-                    if (inputFieldType instanceof GraphQLInputObjectType) {
-                        final var fieldValue = evalValues(environment, (GraphQLInputObjectType) inputFieldType,
-                                        (Map<String, Object>) inputObject.get(fieldName));
-                        values.put(entry.getValue().getSelect(), fieldValue);
-                    }
-                }
-            }
-        }
-        return values;
-    }
-
-    protected Properties getProperties(final DataFetchingEnvironment environment)
-    {
-        LOG.debug("Evaluating properties");
-        final var parentTypeName = environment.getExecutionStepInfo().getObjectType().getName();
-        final var fieldName = environment.getFieldDefinition().getName();
-        final String contextKey = DataFetcherProvider.contextKey(parentTypeName, fieldName);
-        final var props = environment.getGraphQlContext().getOrDefault(contextKey,
-                        new HashMap<>());
-        final var properties = new Properties();
-        properties.putAll(props);
-        LOG.debug("-> {}", props);
-        return properties;
-    }
-
-    protected Type evalCreateType(Properties properties)
+    protected Type evalCreateType(final Properties properties)
         throws CacheReloadException
     {
         Type ret;
@@ -217,35 +142,5 @@ public class BaseCreateMutation
         return stmt.execute();
     }
 
-    protected void evalLinkto(final Type type,
-                              final Insert stmt,
-                              Object value,
-                              final String linkto)
-        throws EFapsException
-    {
-        LOG.debug("Evaluating linkto: {}", linkto);
-        final var linktoPattern = Pattern.compile("linkto\\[([\\w\\d]+).*");
-        final var attrPattern = Pattern.compile("attribute\\[([\\w\\d]+).*");
-        final var linkMatcher = linktoPattern.matcher(linkto);
-        final var attrMatcher = attrPattern.matcher(linkto);
-        linkMatcher.find();
-        attrMatcher.find();
-        final var linkAttrName = linkMatcher.group(1);
-        final var linkAttr = type.getAttribute(linkAttrName);
-        final var linktoType = linkAttr.getLink();
-        final var attrName = attrMatcher.group(1);
-
-        final String crit = String.valueOf(value);
-
-        final var eval = EQL.builder().print()
-                        .query(linktoType.getName())
-                        .where()
-                        .attribute(attrName).eq(crit)
-                        .select().instance()
-                        .evaluate();
-        if (eval.next()) {
-            stmt.set(linkAttrName, Converter.convert(eval.inst()));
-        }
-    }
 
 }
