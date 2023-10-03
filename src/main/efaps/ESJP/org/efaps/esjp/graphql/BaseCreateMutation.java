@@ -30,12 +30,14 @@ import org.efaps.db.Instance;
 import org.efaps.eql.EQL;
 import org.efaps.eql.builder.Converter;
 import org.efaps.eql.builder.Insert;
+import org.efaps.esjp.db.InstanceUtils;
 import org.efaps.util.EFapsException;
 import org.efaps.util.UUIDUtil;
-import org.efaps.util.cache.CacheReloadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import graphql.execution.DataFetcherResult;
+import graphql.execution.DataFetcherResult.Builder;
 import graphql.schema.DataFetchingEnvironment;
 
 @EFapsUUID("c99ee1a6-2967-4cdb-a788-b6aa2630e52b")
@@ -51,15 +53,29 @@ public class BaseCreateMutation
         throws Exception
     {
         LOG.info("Running mutation: {}", this);
+        final var resultBldr = DataFetcherResult.newResult();
         final var props = getProperties(environment);
         final var values = evalArgumentValues(environment, props);
-        final var createType = evalCreateType(props);
-        final var inst = executeStmt(createType, values);
-        return inst == null ? null : inst.getOid();
+        if (validateValues(environment, values, resultBldr)) {
+            final var createType = evalCreateType(props);
+            final var inst = executeStmt(createType, values);
+            if (InstanceUtils.isValid(inst)) {
+                resultBldr.data(inst.getOid());
+            }
+        }
+        return resultBldr.build();
+    }
+
+    protected boolean validateValues(final DataFetchingEnvironment environment,
+                                     final Map<String, Object> values,
+                                     final Builder<Object> resultBldr)
+        throws EFapsException
+    {
+        return true;
     }
 
     protected Type evalCreateType(final Properties properties)
-        throws CacheReloadException
+        throws EFapsException
     {
         Type ret;
         final var typeStr = properties.getProperty("Type");
@@ -141,6 +157,5 @@ public class BaseCreateMutation
         }
         return stmt.execute();
     }
-
 
 }

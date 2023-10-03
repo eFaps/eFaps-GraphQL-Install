@@ -68,8 +68,9 @@ public class BaseUpdateMutation
         return resultBldr.build();
     }
 
-    private Instance evalInstance(final DataFetchingEnvironment environment,
-                                  final Properties props)
+    protected Instance evalInstance(final DataFetchingEnvironment environment,
+                                    final Properties props)
+        throws EFapsException
     {
         Instance ret = null;
         LOG.info("Evaluating instance to update");
