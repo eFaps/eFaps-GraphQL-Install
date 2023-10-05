@@ -33,12 +33,18 @@
             <property name="ModeSearch">EDITABLE</property>
             <property name="Attribute">Description</property>
         </field>
+
         <field name="argumentType">
             <property name="ModeCreate">EDITABLE</property>
             <property name="ModeEdit">EDITABLE</property>
             <property name="ModeSearch">EDITABLE</property>
             <property name="Attribute">ArgumentType</property>
             <property name="Required">true</property>
+        </field>
+        <field name="required">
+            <property name="ModeCreate">EDITABLE</property>
+            <property name="ModeEdit">EDITABLE</property>
+            <property name="Attribute">Required</property>
         </field>
         <field name="whereStmt">
             <property name="ModeCreate">EDITABLE</property>

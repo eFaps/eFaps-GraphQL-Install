@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
 
- Copyright 2003 - 2022 The eFaps Team
+ Copyright 2003 - 2020 The eFaps Team
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,23 +15,19 @@
  limitations under the License.
 
 -->
-<ui-menu xmlns="http://www.efaps.org/xsd"
+<ui-search xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>f936af5d-d240-4fc1-a85b-259288240258</uuid>
+    <uuid>6a58e95e-1cb3-48cf-8f7d-f664a611f831</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_ArgumentTree</name>
-        <target>
-            <menu>GraphQL_ArgumentTree_Menu</menu>
-            <form>GraphQL_ArgumentForm</form>
-        </target>
-        <type>GraphQL_Argument</type>
+        <name>GraphQL_ArgumentTree_ObjectType_Menu_Action_AddExistingSearch</name>
+        <default>
+            <command>GraphQL_InputAndEnumTypeSearch</command>
+        </default>
         <childs>
-            <child>GraphQL_ArgumentTree_ObjectType</child>
+            <child>GraphQL_InputAndEnumTypeSearch</child>
         </childs>
-        <property name="Target">content</property>
-        <property name="TargetMode">view</property>
     </definition>
-</ui-menu>
+</ui-search>

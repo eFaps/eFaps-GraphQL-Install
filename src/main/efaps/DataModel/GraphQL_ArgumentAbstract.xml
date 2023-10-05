@@ -38,5 +38,12 @@
             <sqltable>GraphQL_ElementSQLTable</sqltable>
             <sqlcolumn>INT2</sqlcolumn>
         </attribute>
+        <attribute>
+            <name>Required</name>
+            <type>Boolean</type>
+            <sqltable>GraphQL_ElementSQLTable</sqltable>
+            <sqlcolumn>BOOL1</sqlcolumn>
+            <defaultvalue>false</defaultvalue>
+        </attribute>
     </definition>
 </datamodel-type>
