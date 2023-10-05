@@ -15,19 +15,22 @@
  limitations under the License.
 
 -->
-<ui-search xmlns="http://www.efaps.org/xsd"
+<ui-command xmlns="http://www.efaps.org/xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.efaps.org/xsd http://www.efaps.org/xsd/eFaps_1.0.xsd">
-    <uuid>88417a23-f43f-4a20-b61d-a5f2167ce3fe</uuid>
+    <uuid>1f16f4ac-ceb1-45f9-ad54-876ccacef361</uuid>
     <file-application>eFaps-GraphQL</file-application>
     <definition>
         <version-expression>(version==latest)</version-expression>
-        <name>GraphQL_InputFieldDefinitionTree_ObjectType_Menu_Action_AddExistingSearch</name>
-        <default>
-            <command>GraphQL_InputAndEnumTypeSearch</command>
-        </default>
-        <childs>
-            <child>GraphQL_InputAndEnumTypeSearch</child>
-        </childs>
+        <name>GraphQL_InputAndEnumTypeSearch</name>
+        <target>
+            <form>GraphQL_EnumTypeForm</form>
+            <table>GraphQL_ObjectTypeTable</table>
+            <evaluate program="org.efaps.esjp.common.uisearch.Search">
+                <property name="Type01">GraphQL_EnumType</property>
+                <property name="Type02">GraphQL_InputObjectType</property>
+            </evaluate>
+        </target>
+        <property name="TargetMode">search</property>
     </definition>
-</ui-search>
+</ui-command>

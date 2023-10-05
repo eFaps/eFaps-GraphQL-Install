@@ -24,10 +24,10 @@
         <version-expression>(version==latest)</version-expression>
         <name>GraphQL_MutationArgumentTree_ObjectType_Menu_Action_AddExistingSearch</name>
         <default>
-            <command>GraphQL_InputObjectTypeSearch</command>
+            <command>GraphQL_InputAndEnumTypeSearch</command>
         </default>
         <childs>
-            <child>GraphQL_InputObjectTypeSearch</child>
+            <child>GraphQL_InputAndEnumTypeSearch</child>
         </childs>
     </definition>
 </ui-search>

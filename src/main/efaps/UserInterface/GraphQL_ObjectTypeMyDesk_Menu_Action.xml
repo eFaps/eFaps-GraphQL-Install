@@ -26,6 +26,7 @@
         <childs>
             <child>GraphQL_ObjectTypeMyDesk_Menu_Action_Create</child>
             <child>GraphQL_ObjectTypeMyDesk_Menu_Action_CreateInput</child>
+            <child>GraphQL_ObjectTypeMyDesk_Menu_Action_CreateEnum</child>
             <child>GraphQL_ObjectTypeMyDesk_Menu_Action_Delete</child>
         </childs>
     </definition>
