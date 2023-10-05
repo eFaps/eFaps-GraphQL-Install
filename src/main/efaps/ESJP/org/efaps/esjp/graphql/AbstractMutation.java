@@ -23,12 +23,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.efaps.admin.datamodel.Type;
 import org.efaps.admin.program.esjp.EFapsApplication;
 import org.efaps.admin.program.esjp.EFapsUUID;
 import org.efaps.eql.EQL;
 import org.efaps.eql.builder.Converter;
 import org.efaps.eql2.bldr.AbstractUpdateEQLBuilder;
+import org.efaps.graphql.definition.FieldDef;
 import org.efaps.graphql.definition.ObjectDef;
 import org.efaps.util.EFapsException;
 import org.slf4j.Logger;
@@ -74,7 +76,7 @@ public abstract class AbstractMutation
                     final var inputFieldType = inputObjectType.getField(fieldName).getType();
                     // if it is a simple type
                     if (inputFieldType instanceof GraphQLScalarType || inputFieldType instanceof GraphQLNonNull) {
-                        values.put(entry.getValue().getSelect(), inputObject.get(fieldName));
+                        values.put(getKey(entry.getValue()), inputObject.get(fieldName));
                     }
                     if (inputFieldType instanceof GraphQLList) {
                         final var wrappedType = ((GraphQLList) inputFieldType).getWrappedType();
@@ -84,7 +86,7 @@ public abstract class AbstractMutation
                                 valueList.add(evalValues(environment, (GraphQLInputObjectType) wrappedType,
                                                 (Map<String, Object>) listEntry));
                             }
-                            values.put(entry.getValue().getSelect(), valueList);
+                            values.put(getKey(entry.getValue()), valueList);
                         } else {
                             LOG.error("What???");
                         }
@@ -92,12 +94,18 @@ public abstract class AbstractMutation
                     if (inputFieldType instanceof GraphQLInputObjectType) {
                         final var fieldValue = evalValues(environment, (GraphQLInputObjectType) inputFieldType,
                                         (Map<String, Object>) inputObject.get(fieldName));
-                        values.put(entry.getValue().getSelect(), fieldValue);
+                        values.put(getKey(entry.getValue()), fieldValue);
                     }
                 }
             }
         }
+        LOG.debug("Values: {}", values);
         return values;
+    }
+
+    protected String getKey(final FieldDef fieldDef)
+    {
+        return StringUtils.isEmpty(fieldDef.getSelect()) ? fieldDef.getName() : fieldDef.getSelect();
     }
 
     protected void evalLinkto(final Type type,
