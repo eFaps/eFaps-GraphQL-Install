@@ -52,6 +52,7 @@ import org.slf4j.LoggerFactory;
 import graphql.execution.DataFetcherResult;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
+import graphql.schema.FieldCoordinates;
 import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLNamedType;
 import graphql.schema.GraphQLObjectType;
@@ -191,7 +192,9 @@ public abstract class BaseDataFetcher_Base
                 // get the first level of fields (ImmediateFields)
                 for (final var selectedField : _environment.getSelectionSet().getImmediateFields()) {
                     if (objectDef.getFields().containsKey(selectedField.getName())) {
-                        if (selectedField.getType() instanceof GraphQLObjectType) {
+                        final boolean hasDataFetcher = _environment.getGraphQLSchema().getCodeRegistry().hasDataFetcher(
+                                        FieldCoordinates.coordinates(graphTypeName, selectedField.getName()));
+                        if (selectedField.getType() instanceof GraphQLObjectType && !hasDataFetcher) {
                             addChildSelect(_environment, selectedField, print, objectDef, "");
                         } else {
                             final FieldDef fieldDef = objectDef.getFields().get(selectedField.getName());
@@ -208,7 +211,9 @@ public abstract class BaseDataFetcher_Base
                         map.put(entry.getValue(), staticValues.get(entry.getKey()));
                     }
                     for (final var selectedField : _environment.getSelectionSet().getImmediateFields()) {
-                        if (selectedField.getType() instanceof GraphQLObjectType) {
+                        final boolean hasDataFetcher = _environment.getGraphQLSchema().getCodeRegistry().hasDataFetcher(
+                                        FieldCoordinates.coordinates(graphTypeName, selectedField.getName()));
+                        if (selectedField.getType() instanceof GraphQLObjectType && !hasDataFetcher) {
                             map.put(selectedField.getName(), getChildValue(_environment, selectedField, eval));
                         } else if (!map.containsKey(selectedField.getName())) {
                             map.put(selectedField.getName(),
@@ -243,10 +248,10 @@ public abstract class BaseDataFetcher_Base
     }
 
     protected void addChildSelect(final DataFetchingEnvironment environment,
-                                 final SelectedField selectedField,
-                                 final Print print,
-                                 final ObjectDef parentObjectDef,
-                                 final String baseSelect)
+                                  final SelectedField selectedField,
+                                  final Print print,
+                                  final ObjectDef parentObjectDef,
+                                  final String baseSelect)
     {
         final FieldDef fieldDef = parentObjectDef.getFields().get(selectedField.getName());
         var select = baseSelect;
