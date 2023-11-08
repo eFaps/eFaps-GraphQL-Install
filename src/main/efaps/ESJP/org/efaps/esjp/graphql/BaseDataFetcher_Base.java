@@ -194,7 +194,8 @@ public abstract class BaseDataFetcher_Base
                     if (objectDef.getFields().containsKey(selectedField.getName())) {
                         final boolean hasDataFetcher = _environment.getGraphQLSchema().getCodeRegistry().hasDataFetcher(
                                         FieldCoordinates.coordinates(graphTypeName, selectedField.getName()));
-                        if (selectedField.getType() instanceof GraphQLObjectType && !hasDataFetcher) {
+                        if ((selectedField.getType() instanceof GraphQLObjectType
+                                        || selectedField.getType() instanceof GraphQLList) && !hasDataFetcher) {
                             addChildSelect(_environment, selectedField, print, objectDef, "");
                         } else {
                             final FieldDef fieldDef = objectDef.getFields().get(selectedField.getName());
@@ -213,7 +214,8 @@ public abstract class BaseDataFetcher_Base
                     for (final var selectedField : _environment.getSelectionSet().getImmediateFields()) {
                         final boolean hasDataFetcher = _environment.getGraphQLSchema().getCodeRegistry().hasDataFetcher(
                                         FieldCoordinates.coordinates(graphTypeName, selectedField.getName()));
-                        if (selectedField.getType() instanceof GraphQLObjectType && !hasDataFetcher) {
+                        if ((selectedField.getType() instanceof GraphQLObjectType
+                                        || selectedField.getType() instanceof GraphQLList) && !hasDataFetcher) {
                             map.put(selectedField.getName(), getChildValue(_environment, selectedField, eval));
                         } else if (!map.containsKey(selectedField.getName())) {
                             map.put(selectedField.getName(),
@@ -230,21 +232,59 @@ public abstract class BaseDataFetcher_Base
                         .build();
     }
 
+    @SuppressWarnings("unchecked")
     protected Object getChildValue(final DataFetchingEnvironment environment,
                                    final SelectedField selectedField,
                                    final Evaluator eval)
         throws EFapsException
     {
-        final var map = new HashMap<String, Object>();
-        for (final var childField : environment.getSelectionSet().getFields(selectedField.getName() + "/*")) {
-            if (childField.getType() instanceof GraphQLObjectType) {
-                map.put(childField.getName(), getChildValue(environment, childField, eval));
-            } else {
-                map.put(childField.getName(),
-                                eval.get(childField.getFullyQualifiedName()));
+        Object ret = null;
+        if (selectedField.getType() instanceof GraphQLList) {
+            final var valueList = new ArrayList<Map<String, Object>>();
+            final var tmp = new HashMap<String, List<Object>>();
+            for (final var childField : environment.getSelectionSet().getFields(selectedField.getName() + "/*")) {
+                if (childField.getType() instanceof GraphQLObjectType) {
+                    tmp.put(childField.getName(), (List<Object>) getChildValue(environment, childField, eval));
+                } else {
+                    tmp.put(childField.getName(),
+                                    eval.get(childField.getFullyQualifiedName()));
+                }
             }
+
+            for (final var entry : tmp.entrySet()) {
+                if (valueList.isEmpty()) {
+                    int counter = 0;
+                    while (counter < entry.getValue().size()) {
+                        valueList.add(new HashMap<>());
+                        counter++;
+                    }
+                }
+                final var valueIter = valueList.iterator();
+                for (final Object element : entry.getValue()) {
+                    valueIter.next().put(entry.getKey(), element);
+                }
+            }
+            final var valIter = valueList.iterator();
+            while (valIter.hasNext()) {
+                final var map =  valIter.next();
+                if (map.values().stream().noneMatch(d -> d != null)) {
+                    valIter.remove();
+                }
+            }
+            ret = valueList;
+        } else {
+            final var map = new HashMap<String, Object>();
+            for (final var childField : environment.getSelectionSet().getFields(selectedField.getName() + "/*")) {
+                if (childField.getType() instanceof GraphQLObjectType) {
+                    map.put(childField.getName(), getChildValue(environment, childField, eval));
+                } else {
+                    map.put(childField.getName(),
+                                    eval.get(childField.getFullyQualifiedName()));
+                }
+            }
+            ret = map;
         }
-        return map;
+        return ret;
     }
 
     protected void addChildSelect(final DataFetchingEnvironment environment,
@@ -261,8 +301,14 @@ public abstract class BaseDataFetcher_Base
             }
             select = select + fieldDef.getSelect();
         }
-        final Optional<ObjectDef> currentObjOpt = environment.getGraphQlContext()
-                        .getOrEmpty(((GraphQLObjectType) selectedField.getType()).getName());
+        String typeName;
+        if (selectedField.getType() instanceof GraphQLList) {
+            typeName = ((GraphQLObjectType) ((GraphQLList) selectedField.getType()).getWrappedType()).getName();
+        } else {
+            typeName = ((GraphQLObjectType) selectedField.getType()).getName();
+        }
+
+        final Optional<ObjectDef> currentObjOpt = environment.getGraphQlContext().getOrEmpty(typeName);
         if (currentObjOpt.isPresent()) {
             final var currentObj = currentObjOpt.get();
             for (final var childField : environment.getSelectionSet().getFields(selectedField.getName() + "/*")) {
