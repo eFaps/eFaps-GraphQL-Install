@@ -240,6 +240,7 @@ public abstract class BaseDataFetcher_Base
     {
         Object ret = null;
         if (selectedField.getType() instanceof GraphQLList) {
+            LOG.debug("Get child value for ObjectList: {}", selectedField);
             final var valueList = new ArrayList<Map<String, Object>>();
             final var tmp = new HashMap<String, List<Object>>();
             for (final var childField : environment.getSelectionSet().getFields(selectedField.getName() + "/*")) {
@@ -250,6 +251,7 @@ public abstract class BaseDataFetcher_Base
                                     eval.get(childField.getFullyQualifiedName()));
                 }
             }
+            LOG.debug(" tmp result: {}", tmp);
 
             for (final var entry : tmp.entrySet()) {
                 if (valueList.isEmpty()) {
@@ -264,6 +266,7 @@ public abstract class BaseDataFetcher_Base
                     valueIter.next().put(entry.getKey(), element);
                 }
             }
+            LOG.debug(" valueList result: {}", valueList);
             final var valIter = valueList.iterator();
             while (valIter.hasNext()) {
                 final var map =  valIter.next();
