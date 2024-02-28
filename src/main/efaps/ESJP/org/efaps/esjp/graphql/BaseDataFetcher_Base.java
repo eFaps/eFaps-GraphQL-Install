@@ -31,6 +31,7 @@ import org.efaps.db.Instance;
 import org.efaps.db.stmt.selection.Evaluator;
 import org.efaps.eql.EQL;
 import org.efaps.eql.builder.Print;
+import org.efaps.eql.builder.Query;
 import org.efaps.eql.builder.Where;
 import org.efaps.eql2.EQL2;
 import org.efaps.eql2.IWhereElementTerm;
@@ -108,65 +109,19 @@ public abstract class BaseDataFetcher_Base
             if (!types.isEmpty()) {
                 final var query = EQL.builder().print()
                                 .query(types.values().toArray(new String[types.values().size()]));
-                Where where = null;
+
+                Where where = evalWhere(_environment, argumentDefs, query);
+
                 if (!linkFroms.isEmpty()) {
                     final Instance parentInstance = (Instance) ((Map<?, ?>) _environment.getSource())
                                     .get("currentInstance");
                     if (InstanceUtils.isValid(parentInstance)) {
-                        where = query.where();
-                        where.attr(linkFroms.values().iterator().next()).eq(parentInstance);
-                    }
-                }
-                for (final var entry : _environment.getArguments().entrySet()) {
-                    final var argDefOpt = argumentDefs.stream().filter(en -> en.getName().equals(entry.getKey()))
-                                    .findFirst();
-                    if (argDefOpt.isPresent()) {
-                        final var argDef = argDefOpt.get();
                         if (where == null) {
                             where = query.where();
                         } else {
                             where.and();
                         }
-
-                        final var stmt = (PrintQueryStatement) EQL2.parse("print query type TYPE where "
-                                        + String.format(argDef.getWhereStmt(), entry.getValue())
-                                        + " select attribute[OID]");
-                        final var tmp = where.attr(((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0))
-                                        .element().getAttribute());
-
-                        final var value = convertArgument(argDef.getFieldType(), entry.getValue());
-                        switch (((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0)).element()
-                                        .getComparison()) {
-                            case EQUAL:
-                                tmp.eq(value);
-                                break;
-                            case GREATER:
-                                tmp.greater(value);
-                                break;
-                            case GREATEREQ:
-                                tmp.greaterOrEq(value);
-                                break;
-                            case LESS:
-                                tmp.less(value);
-                                break;
-                            case LESSEQ:
-                                tmp.lessOrEq(value);
-                                break;
-                            case LIKE:
-                                tmp.like(value);
-                                break;
-                            case IN:
-                                tmp.in(value);
-                                break;
-                            case NOTIN:
-                                tmp.notin(value);
-                                break;
-                            case UNEQUAL:
-                                tmp.uneq(value);
-                                break;
-                            default:
-                                Log.error("Not working");
-                        }
+                        where.attr(linkFroms.values().iterator().next()).eq(parentInstance);
                     }
                 }
                 print = query.select();
@@ -231,6 +186,67 @@ public abstract class BaseDataFetcher_Base
                         .build();
     }
 
+    protected Where evalWhere(final DataFetchingEnvironment environment,
+                              final List<ArgumentDef> argumentDefs,
+                              final Query query)
+        throws EFapsException
+    {
+        Where where = null;
+        for (final var entry : environment.getArguments().entrySet()) {
+            final var argDefOpt = argumentDefs.stream().filter(en -> en.getName().equals(entry.getKey()))
+                            .findFirst();
+            if (argDefOpt.isPresent()) {
+                final var argDef = argDefOpt.get();
+                if (where == null) {
+                    where = query.where();
+                } else {
+                    where.and();
+                }
+
+                final var stmt = (PrintQueryStatement) EQL2.parse("print query type TYPE where "
+                                + String.format(argDef.getWhereStmt(), entry.getValue())
+                                + " select attribute[OID]");
+                final var tmp = where.attr(((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0))
+                                .element().getAttribute());
+
+                final var value = convertArgument(argDef.getFieldType(), entry.getValue());
+                switch (((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0)).element()
+                                .getComparison()) {
+                    case EQUAL:
+                        tmp.eq(value);
+                        break;
+                    case GREATER:
+                        tmp.greater(value);
+                        break;
+                    case GREATEREQ:
+                        tmp.greaterOrEq(value);
+                        break;
+                    case LESS:
+                        tmp.less(value);
+                        break;
+                    case LESSEQ:
+                        tmp.lessOrEq(value);
+                        break;
+                    case LIKE:
+                        tmp.like(value);
+                        break;
+                    case IN:
+                        tmp.in(value);
+                        break;
+                    case NOTIN:
+                        tmp.notin(value);
+                        break;
+                    case UNEQUAL:
+                        tmp.uneq(value);
+                        break;
+                    default:
+                        Log.error("Not working");
+                }
+            }
+        }
+        return where;
+    }
+
     @SuppressWarnings("unchecked")
     protected Object getChildValue(final DataFetchingEnvironment environment,
                                    final SelectedField selectedField,
@@ -268,7 +284,7 @@ public abstract class BaseDataFetcher_Base
             LOG.debug(" valueList result: {}", valueList);
             final var valIter = valueList.iterator();
             while (valIter.hasNext()) {
-                final var map =  valIter.next();
+                final var map = valIter.next();
                 if (map.values().stream().noneMatch(d -> d != null)) {
                     valIter.remove();
                 }
