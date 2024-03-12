@@ -184,6 +184,13 @@ public class BaseUpdateMutation
                 evalLinkto(type, eqlBldr, entry.getValue(), field);
             }
         }
-        return eqlBldr instanceof Update ? parentInstance : ((Insert) eqlBldr).execute();
+        Instance retInst;
+        if (eqlBldr instanceof Update) {
+            ((Update) eqlBldr).execute();
+            retInst = parentInstance;
+        } else {
+            retInst = ((Insert) eqlBldr).execute();
+        }
+        return retInst;
     }
 }
