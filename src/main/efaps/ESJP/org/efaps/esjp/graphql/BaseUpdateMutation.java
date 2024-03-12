@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import graphql.GraphqlErrorBuilder;
 import graphql.execution.DataFetcherResult;
+import graphql.execution.DataFetcherResult.Builder;
 import graphql.schema.DataFetchingEnvironment;
 
 @EFapsUUID("05f01272-afab-49a9-a8d2-9e763fe44db2")
@@ -57,8 +58,7 @@ public class BaseUpdateMutation
         final var instance = evalInstance(environment, props);
         if (InstanceUtils.isValid(instance)) {
             final var values = evalArgumentValues(environment, props);
-            executeStmt(instance, values);
-            resultBldr.data(instance.getOid());
+            executeStmt(environment, resultBldr, instance, values);
         } else {
             resultBldr.error(GraphqlErrorBuilder.newError(environment)
                             .message("No valid instance could be evaluated")
@@ -83,7 +83,9 @@ public class BaseUpdateMutation
     }
 
     @SuppressWarnings("unchecked")
-    protected Instance executeStmt(final Instance instance,
+    protected Instance executeStmt(final DataFetchingEnvironment environment,
+                                   final Builder<Object> resultBldr,
+                                   final Instance instance,
                                    final Map<String, Object> values)
         throws EFapsException
     {
@@ -111,6 +113,7 @@ public class BaseUpdateMutation
                 executeStmt(instance, field, (Map<String, Object>) entry.getValue());
             }
         }
+        resultBldr.data(instance.getOid());
         return instance;
     }
 
