@@ -17,7 +17,6 @@ package org.efaps.esjp.graphql;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +54,6 @@ import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.FieldCoordinates;
 import graphql.schema.GraphQLList;
-import graphql.schema.GraphQLNamedSchemaElement;
 import graphql.schema.GraphQLNamedType;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLType;
@@ -385,26 +383,6 @@ public abstract class BaseDataFetcher_Base
     protected void paginate()
     {
 
-    }
-
-    protected Map<String, String> getKeyMapping(final DataFetchingEnvironment environment,
-                                                final GraphQLNamedType graphType,
-                                                final String[] keys)
-    {
-        final var keyMapping = new HashMap<String, String>();
-        final Optional<ObjectDef> objectDefOpt = environment.getGraphQlContext().getOrEmpty(graphType.getName());
-        LOG.info("objectDefOpt {}", objectDefOpt);
-        if (objectDefOpt.isPresent()) {
-            final var objectDef = objectDefOpt.get();
-            for (final var child : graphType.getChildren()) {
-                final var fieldDef = objectDef.getFields().get(((GraphQLNamedSchemaElement) child).getName());
-                if (fieldDef != null && StringUtils.isNotEmpty(fieldDef.getSelect())
-                                && Arrays.stream(keys).anyMatch(fieldDef.getSelect()::equals)) {
-                    keyMapping.put(fieldDef.getSelect(), fieldDef.getName());
-                }
-            }
-        }
-        return keyMapping;
     }
 
     protected List<Map<String, Object>> getValueMaps(final Map<String, String> keyMapping,
