@@ -50,7 +50,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import graphql.execution.DataFetcherResult;
-import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.FieldCoordinates;
 import graphql.schema.GraphQLList;
@@ -62,7 +61,7 @@ import graphql.schema.SelectedField;
 @EFapsUUID("3c405c05-9940-4eea-8d59-959b4890f4b3")
 @EFapsApplication("eFaps-GraphQL")
 public abstract class BaseDataFetcher_Base
-    implements DataFetcher<Object>
+    extends AbstractDataFetcher
 {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseDataFetcher.class);
