@@ -154,6 +154,7 @@ public class BaseCreateMutation
                 evalLinkto(type, stmt, entry.getValue(), field);
             }
         }
+        LOG.debug("EQL-Stmt: {}", stmt.build());
         return stmt.execute();
     }
 
