@@ -18,6 +18,7 @@ package org.efaps.esjp.graphql;
 import org.efaps.admin.event.Parameter;
 import org.efaps.admin.event.Return;
 import org.efaps.admin.program.esjp.EFapsApplication;
+import org.efaps.admin.program.esjp.EFapsListener;
 import org.efaps.admin.program.esjp.EFapsUUID;
 import org.efaps.esjp.admin.common.IReloadCacheListener;
 import org.efaps.graphql.providers.EntryPointProvider;
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 @EFapsUUID("ff8e1700-acef-4504-8b0b-338d5afb8417")
 @EFapsApplication("eFaps-GraphQL")
+@EFapsListener
 public class Caching
     implements IReloadCacheListener
 {
