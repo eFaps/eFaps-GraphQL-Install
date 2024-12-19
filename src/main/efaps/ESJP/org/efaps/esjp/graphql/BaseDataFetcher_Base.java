@@ -17,6 +17,7 @@ package org.efaps.esjp.graphql;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,10 @@ import org.efaps.eql.EQL;
 import org.efaps.eql.builder.Print;
 import org.efaps.eql.builder.Query;
 import org.efaps.eql.builder.Where;
+import org.efaps.eql2.Comparison;
 import org.efaps.eql2.EQL2;
 import org.efaps.eql2.IWhereElementTerm;
+import org.efaps.eql2.bldr.AbstractWhereBuilder;
 import org.efaps.eql2.impl.PrintQueryStatement;
 import org.efaps.esjp.common.properties.PropertiesUtil;
 import org.efaps.esjp.db.InstanceUtils;
@@ -93,6 +96,10 @@ public abstract class BaseDataFetcher_Base
         final Map<Integer, String> linkFroms = PropertiesUtil.analyseProperty(properties, "LinkFrom", 0);
         final Map<Integer, String> staticKeys = PropertiesUtil.analyseProperty(properties, "StaticKey", 0);
         final Map<Integer, String> staticValues = PropertiesUtil.analyseProperty(properties, "StaticValue", 0);
+        final Map<Integer, String> staticWhere = PropertiesUtil.analyseProperty(properties, "StaticWhere", 0);
+        LOG.info("properties: {}", properties);
+        LOG.info("Type: {}", types);
+        LOG.info("staticWhere: {}", staticWhere);
 
         final var localContext = getLocalContext(_environment);
 
@@ -109,7 +116,7 @@ public abstract class BaseDataFetcher_Base
                 final var query = EQL.builder().print()
                                 .query(types.values().toArray(new String[types.values().size()]));
 
-                Where where = evalWhere(_environment, argumentDefs, query);
+                Where where = evalWhere(_environment, argumentDefs, staticWhere.values(), query);
 
                 if (!linkFroms.isEmpty()) {
                     final Instance parentInstance = (Instance) ((Map<?, ?>) _environment.getSource())
@@ -187,9 +194,11 @@ public abstract class BaseDataFetcher_Base
 
     protected Where evalWhere(final DataFetchingEnvironment environment,
                               final List<ArgumentDef> argumentDefs,
+                              final Collection<String> whereElements,
                               final Query query)
         throws EFapsException
     {
+        LOG.info("whereElements: {}", whereElements);
         Where where = null;
         for (final var entry : environment.getArguments().entrySet()) {
             final var argDefOpt = argumentDefs.stream().filter(en -> en.getName().equals(entry.getKey()))
@@ -209,41 +218,63 @@ public abstract class BaseDataFetcher_Base
                                 .element().getAttribute());
 
                 final var value = convertArgument(argDef.getFieldType(), entry.getValue());
-                switch (((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0)).element()
-                                .getComparison()) {
-                    case EQUAL:
-                        tmp.eq(value);
-                        break;
-                    case GREATER:
-                        tmp.greater(value);
-                        break;
-                    case GREATEREQ:
-                        tmp.greaterOrEq(value);
-                        break;
-                    case LESS:
-                        tmp.less(value);
-                        break;
-                    case LESSEQ:
-                        tmp.lessOrEq(value);
-                        break;
-                    case LIKE:
-                        tmp.like(value);
-                        break;
-                    case IN:
-                        tmp.in(value);
-                        break;
-                    case NOTIN:
-                        tmp.notin(value);
-                        break;
-                    case UNEQUAL:
-                        tmp.uneq(value);
-                        break;
-                    default:
-                        Log.error("Not working");
-                }
+
+                addComparison(tmp, ((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0)).element()
+                                .getComparison(), value);
             }
         }
+        for (final var whereElement : whereElements) {
+            if (where == null) {
+                where = query.where();
+            } else {
+                where.and();
+            }
+            LOG.info("staticWhere-whereElement: {}", whereElement);
+            final var stmt = (PrintQueryStatement) EQL2.parse("print query type TYPE where "
+                            + whereElement
+                            + " select attribute[OID]");
+            final var elementTerm = ((IWhereElementTerm) stmt.getQuery().getWhere().getTerms(0)).element();
+            final var tmp = where.attr(elementTerm.getAttribute());
+            addComparison(tmp, elementTerm.getComparison(), elementTerm.getValues(0));
+        }
         return where;
+    }
+
+    protected void addComparison(final AbstractWhereBuilder<?> whereBldr,
+                                 final Comparison comparison,
+                                 final String value)
+    {
+        switch (comparison) {
+            case EQUAL:
+                whereBldr.eq(value);
+                break;
+            case GREATER:
+                whereBldr.greater(value);
+                break;
+            case GREATEREQ:
+                whereBldr.greaterOrEq(value);
+                break;
+            case LESS:
+                whereBldr.less(value);
+                break;
+            case LESSEQ:
+                whereBldr.lessOrEq(value);
+                break;
+            case LIKE:
+                whereBldr.like(value);
+                break;
+            case IN:
+                whereBldr.in(value);
+                break;
+            case NOTIN:
+                whereBldr.notin(value);
+                break;
+            case UNEQUAL:
+                whereBldr.uneq(value);
+                break;
+            default:
+                Log.error("Not working");
+        }
     }
 
     @SuppressWarnings("unchecked")
