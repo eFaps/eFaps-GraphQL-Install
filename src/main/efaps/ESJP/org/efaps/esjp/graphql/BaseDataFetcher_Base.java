@@ -97,9 +97,7 @@ public abstract class BaseDataFetcher_Base
         final Map<Integer, String> staticKeys = PropertiesUtil.analyseProperty(properties, "StaticKey", 0);
         final Map<Integer, String> staticValues = PropertiesUtil.analyseProperty(properties, "StaticValue", 0);
         final Map<Integer, String> staticWhere = PropertiesUtil.analyseProperty(properties, "StaticWhere", 0);
-        LOG.info("properties: {}", properties);
-        LOG.info("Type: {}", types);
-        LOG.info("staticWhere: {}", staticWhere);
+        LOG.debug("properties: {}", properties);
 
         final var localContext = getLocalContext(_environment);
 
@@ -198,7 +196,7 @@ public abstract class BaseDataFetcher_Base
                               final Query query)
         throws EFapsException
     {
-        LOG.info("whereElements: {}", whereElements);
+
         Where where = null;
         for (final var entry : environment.getArguments().entrySet()) {
             final var argDefOpt = argumentDefs.stream().filter(en -> en.getName().equals(entry.getKey()))
@@ -223,6 +221,7 @@ public abstract class BaseDataFetcher_Base
                                 .getComparison(), value);
             }
         }
+        LOG.debug("whereElements to add: {}", whereElements);
         for (final var whereElement : whereElements) {
             if (where == null) {
                 where = query.where();
