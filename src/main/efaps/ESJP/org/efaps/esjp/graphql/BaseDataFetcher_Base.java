@@ -48,7 +48,6 @@ import org.efaps.graphql.providers.DataFetcherProvider;
 import org.efaps.graphql.providers.FieldType;
 import org.efaps.util.DateTimeUtil;
 import org.efaps.util.EFapsException;
-import org.jfree.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -244,36 +243,18 @@ public abstract class BaseDataFetcher_Base
                                  final String value)
     {
         switch (comparison) {
-            case EQUAL:
-                whereBldr.eq(value);
-                break;
-            case GREATER:
-                whereBldr.greater(value);
-                break;
-            case GREATEREQ:
-                whereBldr.greaterOrEq(value);
-                break;
-            case LESS:
-                whereBldr.less(value);
-                break;
-            case LESSEQ:
-                whereBldr.lessOrEq(value);
-                break;
-            case LIKE:
-                whereBldr.like(value);
-                break;
-            case IN:
-                whereBldr.in(value);
-                break;
-            case NOTIN:
-                whereBldr.notin(value);
-                break;
-            case UNEQUAL:
-                whereBldr.uneq(value);
-                break;
-            default:
-                Log.error("Not working");
+            case EQUAL -> whereBldr.eq(value);
+            case GREATER -> whereBldr.greater(value);
+            case GREATEREQ -> whereBldr.greaterOrEq(value);
+            case LESS -> whereBldr.less(value);
+            case LESSEQ -> whereBldr.lessOrEq(value);
+            case LIKE -> whereBldr.like(value);
+            case IN -> whereBldr.in(value);
+            case NOTIN -> whereBldr.notin(value);
+            case UNEQUAL -> whereBldr.uneq(value);
+            default -> LOG.error("Not working");
         }
+
     }
 
     @SuppressWarnings("unchecked")
