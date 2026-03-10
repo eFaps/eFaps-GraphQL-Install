@@ -46,7 +46,6 @@ import org.efaps.graphql.definition.FieldDef;
 import org.efaps.graphql.definition.ObjectDef;
 import org.efaps.graphql.providers.DataFetcherProvider;
 import org.efaps.graphql.providers.FieldType;
-import org.efaps.util.DateTimeUtil;
 import org.efaps.util.EFapsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -374,12 +373,8 @@ public abstract class BaseDataFetcher_Base
         String ret;
         switch (fieldType) {
             case DATETIME:
-                // dateTimes are stored without a timezone in the database ->
-                // therefore the given datetime must be converted to the
-                // timezone of the database
-                if (value instanceof OffsetDateTime) {
-                    ret = ((OffsetDateTime) value).atZoneSameInstant(DateTimeUtil.getDBZoneId()).toLocalDateTime()
-                                    .toString();
+                if (value instanceof final OffsetDateTime offsetDateTime) {
+                    ret = offsetDateTime.toString();
                 } else {
                     ret = Objects.toString(value);
                 }
