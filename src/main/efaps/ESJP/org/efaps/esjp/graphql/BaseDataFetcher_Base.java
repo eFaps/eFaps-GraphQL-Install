@@ -68,15 +68,16 @@ public abstract class BaseDataFetcher_Base
     private static final Logger LOG = LoggerFactory.getLogger(BaseDataFetcher.class);
 
     @Override
-    public Object get(final DataFetchingEnvironment _environment)
+    public Object get(final DataFetchingEnvironment environment)
         throws Exception
     {
-        LOG.debug("Running BaseDataFetcher with: {}", _environment);
+        LOG.info("Running BaseDataFetcher with arguments: {}, source: {}",
+                        environment.getArguments(), environment.getSource());
         final var resultBldr = DataFetcherResult.newResult();
         final List<Map<String, Object>> values = new ArrayList<>();
-        final var fieldName = _environment.getFieldDefinition().getName();
-        final var parentTypeName = _environment.getExecutionStepInfo().getObjectType().getName();
-        final Optional<ObjectDef> baseObjectDefOpt = _environment.getGraphQlContext()
+        final var fieldName = environment.getFieldDefinition().getName();
+        final var parentTypeName = environment.getExecutionStepInfo().getObjectType().getName();
+        final Optional<ObjectDef> baseObjectDefOpt = environment.getGraphQlContext()
                         .getOrEmpty(parentTypeName);
         final var argumentDefs = new ArrayList<ArgumentDef>();
         if (baseObjectDefOpt.isPresent()) {
@@ -86,7 +87,7 @@ public abstract class BaseDataFetcher_Base
             }
         }
         final String contextKey = DataFetcherProvider.contextKey(parentTypeName, fieldName);
-        final var props = _environment.getGraphQlContext().getOrDefault(contextKey,
+        final var props = environment.getGraphQlContext().getOrDefault(contextKey,
                         new HashMap<>());
         final var properties = new Properties();
         properties.putAll(props);
@@ -97,14 +98,17 @@ public abstract class BaseDataFetcher_Base
         final Map<Integer, String> staticWhere = PropertiesUtil.analyseProperty(properties, "StaticWhere", 0);
         LOG.debug("properties: {}", properties);
 
-        final var localContext = getLocalContext(_environment);
+        final var localContext = getLocalContext(environment);
 
-        GraphQLType graphQLType = _environment.getExecutionStepInfo().getFieldDefinition().getType();
+        GraphQLType graphQLType = environment.getExecutionStepInfo().getFieldDefinition().getType();
+        boolean isObject = true;
         if (graphQLType instanceof GraphQLList) {
+            isObject = false;
             graphQLType = ((GraphQLList) graphQLType).getWrappedType();
         }
         final var graphTypeName = ((GraphQLNamedType) graphQLType).getName();
-        final Optional<ObjectDef> objectDefOpt = _environment.getGraphQlContext().getOrEmpty(graphTypeName);
+        LOG.debug("graphQLType: {}", graphQLType);
+        final Optional<ObjectDef> objectDefOpt = environment.getGraphQlContext().getOrEmpty(graphTypeName);
         if (objectDefOpt.isPresent()) {
             final var objectDef = objectDefOpt.get();
             Print print = null;
@@ -112,10 +116,10 @@ public abstract class BaseDataFetcher_Base
                 final var query = EQL.builder().print()
                                 .query(types.values().toArray(new String[types.values().size()]));
 
-                Where where = evalWhere(_environment, argumentDefs, staticWhere.values(), query);
+                Where where = evalWhere(environment, argumentDefs, staticWhere.values(), query);
 
                 if (!linkFroms.isEmpty()) {
-                    final Instance parentInstance = (Instance) ((Map<?, ?>) _environment.getSource())
+                    final Instance parentInstance = (Instance) ((Map<?, ?>) environment.getSource())
                                     .get("currentInstance");
                     if (InstanceUtils.isValid(parentInstance)) {
                         if (where == null) {
@@ -128,9 +132,17 @@ public abstract class BaseDataFetcher_Base
                 }
                 print = query.select();
             } else {
+                LOG.debug("No Type as basis for Query therefoe checking for instances from: {}", fieldName);
                 // if the type is empty --> check if we got a list of instances
                 // or one instance
-                final var selectValue = ((Map<?, ?>) _environment.getSource()).get(fieldName);
+                Object selectValue;
+                if (environment.getSource() == null) {
+                    LOG.debug("No source ==> using argument");
+                    // maybe make that configurable with properties
+                    selectValue = environment.getArguments().get("oid");
+                } else {
+                    selectValue = ((Map<?, ?>) environment.getSource()).get(fieldName);
+                }
                 if (selectValue != null) {
                     if (selectValue instanceof List) {
                         @SuppressWarnings("unchecked") final var instances = ((List<Instance>) selectValue).stream()
@@ -139,20 +151,22 @@ public abstract class BaseDataFetcher_Base
                         if (instances.length > 0) {
                             print = EQL.builder().print(instances);
                         }
-                    } else if (selectValue instanceof Instance) {
-                        print = EQL.builder().print((Instance) selectValue);
+                    } else if (selectValue instanceof final Instance selectedInst) {
+                        print = EQL.builder().print(selectedInst);
+                    } else if (selectValue instanceof final String selectValueStr) {
+                        print = EQL.builder().print(selectValueStr);
                     }
                 }
             }
             if (print != null) {
                 // get the first level of fields (ImmediateFields)
-                for (final var selectedField : _environment.getSelectionSet().getImmediateFields()) {
+                for (final var selectedField : environment.getSelectionSet().getImmediateFields()) {
                     if (objectDef.getFields().containsKey(selectedField.getName())) {
-                        final boolean hasDataFetcher = _environment.getGraphQLSchema().getCodeRegistry().hasDataFetcher(
+                        final boolean hasDataFetcher = environment.getGraphQLSchema().getCodeRegistry().hasDataFetcher(
                                         FieldCoordinates.coordinates(graphTypeName, selectedField.getName()));
                         if ((selectedField.getType() instanceof GraphQLObjectType
                                         || selectedField.getType() instanceof GraphQLList) && !hasDataFetcher) {
-                            addChildSelect(_environment, selectedField, print, objectDef, "");
+                            addChildSelect(environment, selectedField, print, objectDef, "");
                         } else {
                             final FieldDef fieldDef = objectDef.getFields().get(selectedField.getName());
                             if (StringUtils.isNotBlank(fieldDef.getSelect())) {
@@ -167,12 +181,12 @@ public abstract class BaseDataFetcher_Base
                     for (final var entry : staticKeys.entrySet()) {
                         map.put(entry.getValue(), staticValues.get(entry.getKey()));
                     }
-                    for (final var selectedField : _environment.getSelectionSet().getImmediateFields()) {
-                        final boolean hasDataFetcher = _environment.getGraphQLSchema().getCodeRegistry().hasDataFetcher(
+                    for (final var selectedField : environment.getSelectionSet().getImmediateFields()) {
+                        final boolean hasDataFetcher = environment.getGraphQLSchema().getCodeRegistry().hasDataFetcher(
                                         FieldCoordinates.coordinates(graphTypeName, selectedField.getName()));
                         if ((selectedField.getType() instanceof GraphQLObjectType
                                         || selectedField.getType() instanceof GraphQLList) && !hasDataFetcher) {
-                            map.put(selectedField.getName(), getChildValue(_environment, selectedField, eval));
+                            map.put(selectedField.getName(), getChildValue(environment, selectedField, eval));
                         } else if (!map.containsKey(selectedField.getName())) {
                             map.put(selectedField.getName(),
                                             eval.get(selectedField.getFullyQualifiedName()));
@@ -183,7 +197,19 @@ public abstract class BaseDataFetcher_Base
                 }
             }
         }
-        return resultBldr.data(values)
+        LOG.debug("values: {}", values);
+        Object payload;
+        if (isObject) {
+            if (values.isEmpty()) {
+                payload = null;
+            } else {
+                payload = values.get(0);
+            }
+        } else {
+            payload = values;
+        }
+        LOG.debug("payload: {}", payload);
+        return resultBldr.data(payload)
                         .localContext(localContext)
                         .build();
     }
