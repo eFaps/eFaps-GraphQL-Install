@@ -54,10 +54,16 @@ public abstract class AbstractMutation
     {
         LOG.debug("Evaluating arguments");
         final var inputVariableName = props.getProperty("InputVariable", "input");
-        final var inputObjectType = (GraphQLInputObjectType) environment.getFieldDefinition()
-                        .getArgument(inputVariableName).getType();
-        final var inputObject = environment.<Map<String, Object>>getArgument(inputVariableName);
-        return evalValues(environment, inputObjectType, inputObject);
+        Map<String, Object> values;
+        if (environment.containsArgument(inputVariableName)) {
+            final var inputObjectType = (GraphQLInputObjectType) environment.getFieldDefinition()
+                            .getArgument(inputVariableName).getType();
+            final var inputObject = environment.<Map<String, Object>>getArgument(inputVariableName);
+            values = evalValues(environment, inputObjectType, inputObject);
+        } else {
+            values = new HashMap<>();
+        }
+        return values;
     }
 
     @SuppressWarnings("unchecked")

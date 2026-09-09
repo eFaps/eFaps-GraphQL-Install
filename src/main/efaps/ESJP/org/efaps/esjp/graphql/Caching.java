@@ -25,6 +25,8 @@ import org.efaps.graphql.providers.EntryPointProvider;
 import org.efaps.graphql.providers.MutationProvider;
 import org.efaps.graphql.providers.TypeProvider;
 import org.efaps.util.EFapsException;
+import org.efaps.util.cache.InfinispanCache;
+import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +36,8 @@ import org.slf4j.LoggerFactory;
 public class Caching
     implements IReloadCacheListener
 {
+    private static String UTILCACHE = "org.efaps.esjp.graphql.GraphQLUtilCache";
+
     private static final Logger LOG = LoggerFactory.getLogger(Caching.class);
 
     @Override
@@ -68,5 +72,13 @@ public class Caching
         EntryPointProvider.clearCache();
         MutationProvider.clearCache();
         TypeProvider.clearCache();
+    }
+
+    public static Cache<String, String> getUtilCache()
+    {
+        if (!InfinispanCache.get().exists(UTILCACHE)) {
+            InfinispanCache.get().initCache(UTILCACHE);
+        }
+        return InfinispanCache.get().<String, String>getCache(UTILCACHE);
     }
 }
