@@ -60,6 +60,13 @@ public abstract class AbstractMutation
                             .getArgument(inputVariableName).getType();
             final var inputObject = environment.<Map<String, Object>>getArgument(inputVariableName);
             values = evalValues(environment, inputObjectType, inputObject);
+            // if we only have one --> use it
+        } else if (environment.getArguments().size() == 1) {
+            final var entry = environment.getArguments().entrySet().iterator().next();
+            final var inputObjectType = (GraphQLInputObjectType) environment.getFieldDefinition()
+                            .getArgument(entry.getKey()).getType();
+            final var inputObject = environment.<Map<String, Object>>getArgument(entry.getKey());
+            values = evalValues(environment, inputObjectType, inputObject);
         } else {
             values = new HashMap<>();
         }
@@ -90,6 +97,13 @@ public abstract class AbstractMutation
                             for (final var listEntry : (List<?>) inputObject.get(fieldName)) {
                                 valueList.add(evalValues(environment, (GraphQLInputObjectType) wrappedType,
                                                 (Map<String, Object>) listEntry));
+                            }
+                            values.put(getKey(entry.getValue()), valueList);
+                        } else  if (wrappedType instanceof GraphQLScalarType
+                                        || wrappedType instanceof GraphQLNonNull) {
+                            final var valueList = new ArrayList<>();
+                            for (final var listEntry : (List<?>) inputObject.get(fieldName)) {
+                                valueList.add(listEntry);
                             }
                             values.put(getKey(entry.getValue()), valueList);
                         } else {
