@@ -21,11 +21,13 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.efaps.admin.program.esjp.EFapsApplication;
 import org.efaps.admin.program.esjp.EFapsUUID;
 import org.efaps.db.Context;
 import org.efaps.util.EFapsException;
+import org.efaps.util.RandomUtil;
 import org.efaps.util.SignUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,37 @@ public abstract class AbstractFileMutation
 {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractFileMutation.class);
+
+    protected String cacheKey(String reference)
+    {
+        return getCachePrefix() + "-" + reference;
+    }
+
+    protected String cache(String value)
+    {
+        final var refKey = RandomUtil.randomAlphanumeric(8);
+        LOG.info("caching: {} - {}", refKey, value);
+        Caching.getUtilCache().put(cacheKey(refKey), value, 30, TimeUnit.MINUTES);
+        return refKey;
+    }
+
+    protected String getFromCache(final String reference)
+    {
+        return Caching.getUtilCache().get(cacheKey(reference));
+    }
+
+    protected void clearCache(final String reference) {
+        Caching.getUtilCache().get(cacheKey(reference));
+    }
+
+    public boolean applies(final String reference)
+    {
+        final var applies = Caching.getUtilCache().containsKey(cacheKey(reference));
+        LOG.info("checking for reference: {} -> {}", reference, applies);
+        return applies;
+    }
+
+    protected abstract String getCachePrefix();
 
     public String evalUrl(final String reference)
         throws EFapsException

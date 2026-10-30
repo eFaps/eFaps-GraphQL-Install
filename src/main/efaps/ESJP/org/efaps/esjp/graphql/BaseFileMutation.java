@@ -19,9 +19,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.efaps.admin.program.esjp.EFapsApplication;
+import org.efaps.admin.program.esjp.EFapsListener;
 import org.efaps.admin.program.esjp.EFapsUUID;
 import org.efaps.db.Checkin;
 import org.efaps.db.Instance;
@@ -40,6 +40,7 @@ import graphql.schema.DataFetchingEnvironment;
 
 @EFapsUUID("d641c129-b839-4ccb-bfb6-a47209da2090")
 @EFapsApplication("eFaps-GraphQL")
+@EFapsListener
 public class BaseFileMutation
     extends AbstractFileMutation
     implements ISignedUrl
@@ -47,17 +48,22 @@ public class BaseFileMutation
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseFileMutation.class);
 
+    private static String CACHEPREFIX = RandomUtil.randomAlphanumeric(3);
+
+    @Override
+    protected String getCachePrefix()
+    {
+        return CACHEPREFIX;
+    }
+
     @Override
     public Object get(final DataFetchingEnvironment environment)
         throws Exception
     {
         final var props = getProperties(environment);
         final var values = evalArgumentValues(environment, props);
-
-        final var refKey = RandomUtil.randomAlphanumeric(8);
         final var value = SerializationUtil.getObjectMapper().writeValueAsString(values);
-        LOG.info("caching: {} - {}", refKey, value);
-        Caching.getUtilCache().put(refKey, value, 30, TimeUnit.MINUTES);
+        final var refKey = cache(value);
         return evalUrl(refKey);
     }
 
@@ -68,20 +74,12 @@ public class BaseFileMutation
     }
 
     @Override
-    public boolean applies(final String reference)
-    {
-        final var applies = Caching.getUtilCache().containsKey(reference);
-        LOG.info("checking for reference: {} -> {}", reference, applies);
-        return applies;
-    }
-
-    @Override
     public Object onUpload(final File file,
                            final String reference)
     {
         String oid = null;
         LOG.info("preparing for file - reference: {} -> {}", file, reference);
-        final var argumentsStr = Caching.getUtilCache().get(reference);
+        final var argumentsStr = getFromCache(reference);
         LOG.info("arguments: {}", argumentsStr);
         try {
             final var map = SerializationUtil.getObjectMapper().readValue(argumentsStr,
@@ -98,7 +96,7 @@ public class BaseFileMutation
             } else {
                 LOG.error("Missing required value for 'oid'");
             }
-            Caching.getUtilCache().remove(reference);
+            clearCache(reference);
         } catch (final JsonProcessingException | EFapsException | FileNotFoundException e) {
             LOG.error("catched", e);
         }
